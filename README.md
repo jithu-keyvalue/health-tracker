@@ -1,17 +1,17 @@
-Step 06 – Functions Basics
-==========================
+Step 07 – Save to CSV
+=====================
 
 💭 Problem / Pain  
 -----------------
-Your code is getting longer and harder to follow.  
-You want to cleanly group related logic and avoid repetition.
+You lose all data when the program ends.  
+You want to save your Hb history so it can be reused later.
 
 🛠️ Tasks  
 ---------
-- Figure out how to run/use the code defined in program.py
+- Invoke the function to save data in csv at the end of `main` function
 
 ✅ Check  
 --------
 - Run `python program.py`
-- The output stays the same
-- Code is now broken into 2–3 clean, reusable functions
+- Enter multiple Hb values
+- Open `hb_data.csv` — it should contain the data

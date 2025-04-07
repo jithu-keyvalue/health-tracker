@@ -1,20 +1,13 @@
 📝 Notes  
 --------
-- 🧩 Functions  
-  Use `def` to define reusable blocks of logic.
-  ```python
-  def greet(name):
-      print(f"Hello, {name}!")
-  ```
+- 🧾 CSV (Comma-Separated Values)  
+  A plain-text format to store table-like data.
 
-- 🔁 return values  
-    Functions can return results using return.
-  ```python
-  def add(a, b):
-      return a + b
-  ```
+- 📄 Writing to a file (basic way)  
+  Use `open()` and `close()` to write manually.
 
-- 🧪 Why use functions?
-  - To organize your code
-  - To avoid repetition
-  - To make each part easier to understand and test
+  ```python
+    file = open("output.txt", "w")
+    file.write("some text\n")
+    file.close()
+  ```
