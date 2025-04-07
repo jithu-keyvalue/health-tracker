@@ -1,29 +1,17 @@
-Step 03 – Basic Health Check
-============================
+Step 04 – Track Hb by Date
+===========================
 
 💭 Problem / Pain  
 -----------------
-You want to check if your hemoglobin level is okay — but right now, the program doesn’t know how to evaluate anything.
+You're only checking hemoglobin once — but you want to track it over time to see how it's changing.
 
 🛠️ Tasks  
 ---------
-- Fix the issue while printing the Hb status
+- Fix the issue in saving Hb value in dictionary
 
 ✅ Check  
 --------
 - Run `python program.py`
-- It asks for gender and Hb
-- It prints if the value is normal or low (based on basic rules)
-
-🧠 What You Learnt  
-------------------
-- How to read numeric input from the user  
-- How to use `if-else` for conditional logic  
-- How to combine multiple inputs and print dynamic results  
-
-
-🧪 Hb Level Check Rule
-----------------------
-- If male and Hb < 13 → "Low"
-- If female and Hb < 12 → "Low"
-- Else → "Normal"
+- Enter multiple dates + Hb values
+- See output like:
+  `{'2024-03-01': 13.2, '2024-04-01': 13.7}`

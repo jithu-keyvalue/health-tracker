@@ -2,13 +2,14 @@ print("Welcome to Vitals Tracker!")
 
 name = input("What is your name? ")
 gender = input("What is your gender? (male/female): ")
-hb = float(input("Enter your hemoglobin (Hb) value: "))
 
-if gender == "male" and hb < 13:
-    status = "Low"
-elif gender == "female" and hb < 12:
-    status = "Low"
-else:
-    status = "Normal"
+entry_count = int(input("How many Hb records do you want to enter? "))
+hb_history = {}
 
-print(f"Hello, {name}! Your hemoglobin level is {gender}.")
+for i  in range(entry_count):
+    date = input("Enter date (YYYY-MM-DD): ")
+    hb = float(input("Enter Hb value for that date: "))
+    hb_history[name] = hb
+
+print(f"\nHi {name}, here is your Hb history:")
+print(hb_history)

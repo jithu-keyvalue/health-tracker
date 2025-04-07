@@ -1,20 +1,22 @@
 📝 Notes  
 --------
-- 🔢 float()  
-  Converts user input (which is always a string) into a number.
+- 🔁 for loop  
+  Used to repeat an action a fixed number of times.
 
+  Example:
   ```python
-  height = float(input("Enter your height: "))
+    for i in range(3):
+        print("Hello!")
   ```
+  This will print "Hello!" three times.
 
-- 🤔 if-elif-else  
-  Use conditional logic to branch based on values.
-
+- 🗂️ Dictionary  
+  A way to store key → value pairs. You can look up values using keys.
+  Example:
   ```python
-  if condition:
-      ...
-  elif other_condition:
-      ...
-  else:
-      ...
+    scores = {}
+    scores["Alice"] = 90
+    scores["Bob"] = 85
+
+    print(scores["Alice"])  # prints 90
   ```
