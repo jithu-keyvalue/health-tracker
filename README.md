@@ -1,22 +1,29 @@
-Step 02 – User Input
-====================
+Step 03 – Basic Health Check
+============================
 
 💭 Problem / Pain  
 -----------------
-You want your program to do more than just printing hardcoded text.
+You want to check if your hemoglobin level is okay — but right now, the program doesn’t know how to evaluate anything.
 
 🛠️ Tasks  
 ---------
-- Update the script to greet using the name given by user
+- Fix the issue while printing the Hb status
 
 ✅ Check  
 --------
 - Run `python program.py`
-- It asks for your name
-- It should prints: `Hello, <your name>!`
+- It asks for gender and Hb
+- It prints if the value is normal or low (based on basic rules)
 
 🧠 What You Learnt  
 ------------------
-- How to accept user input during runtime  
-- How to store input in a variable  
-- How to use that variable in a `print()` statement  
+- How to read numeric input from the user  
+- How to use `if-else` for conditional logic  
+- How to combine multiple inputs and print dynamic results  
+
+
+🧪 Hb Level Check Rule
+----------------------
+- If male and Hb < 13 → "Low"
+- If female and Hb < 12 → "Low"
+- Else → "Normal"

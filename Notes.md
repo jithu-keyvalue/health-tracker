@@ -1,19 +1,20 @@
 📝 Notes  
 --------
-- 🧍‍♂️ input()  
-  Pauses the program and waits for the user to type something.
+- 🔢 float()  
+  Converts user input (which is always a string) into a number.
 
   ```python
-  name = input("Enter your age: ")
-  ```  
-  The message inside input() is shown as a prompt.
-
-- 📦 Variables  
-  You can store the result of input() in a variable to reuse it.
-
-- 🔤 f-strings  
-  Use f"..." to insert variables directly into strings.
-  ```python
-  print(f"You are {age} years old!")
+  height = float(input("Enter your height: "))
   ```
 
+- 🤔 if-elif-else  
+  Use conditional logic to branch based on values.
+
+  ```python
+  if condition:
+      ...
+  elif other_condition:
+      ...
+  else:
+      ...
+  ```
