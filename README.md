@@ -1,17 +1,17 @@
-Step 05 – Bar Chart Print
-=========================
+Step 06 – Functions Basics
+==========================
 
 💭 Problem / Pain  
 -----------------
-You have Hb values over time, but reading numbers isn't easy.  
-You want a simple visual to spot trends.
+Your code is getting longer and harder to follow.  
+You want to cleanly group related logic and avoid repetition.
 
 🛠️ Tasks  
 ---------
-- Fix the issue while reading values from dictionary for printing
+- Figure out how to run/use the code defined in program.py
 
 ✅ Check  
 --------
 - Run `python program.py`
-- Enter multiple date + Hb values
-- See the trend visually.
+- The output stays the same
+- Code is now broken into 2–3 clean, reusable functions

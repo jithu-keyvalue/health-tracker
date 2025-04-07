@@ -1,23 +1,20 @@
 📝 Notes  
 --------
-- ➰ Looping through a dictionary  
-  Use `.items()` to get both key and value in a loop:
-
+- 🧩 Functions  
+  Use `def` to define reusable blocks of logic.
   ```python
-  for key, value in some_dict.items():
-      print(key, value)
+  def greet(name):
+      print(f"Hello, {name}!")
   ```
 
-- 🔁 String multiplication  
-Repeat a character using *:
+- 🔁 return values  
+    Functions can return results using return.
   ```python
-    print("▓" * 10)  # ▓▓▓▓▓▓▓▓▓▓
+  def add(a, b):
+      return a + b
   ```
 
-- 🧾 f-string formatting  
-  You can control width and alignment in f-strings:
-  ```python
-    print(f"{label} | {bar:<20} {value}")
-  ```
-
-  :<20 → left-align to 20 characters (helps make the chart neat)
+- 🧪 Why use functions?
+  - To organize your code
+  - To avoid repetition
+  - To make each part easier to understand and test

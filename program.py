@@ -1,17 +1,29 @@
-print("Welcome to Vitals Tracker!")
+def collect_hb_history():
+    entry_count = int(input("How many Hb records do you want to enter? "))
+    hb_history = {}
 
-name = input("What is your name? ")
-gender = input("What is your gender? (male/female): ")
+    for _ in range(entry_count):
+        date = input("Enter date (YYYY-MM-DD): ")
+        hb = float(input("Enter Hb value for that date: "))
+        hb_history[date] = hb
 
-entry_count = int(input("How many Hb records do you want to enter? "))
-hb_history = {}
+    return hb_history
 
-for i  in range(entry_count):
-    date = input("Enter date (YYYY-MM-DD): ")
-    hb = float(input("Enter Hb value for that date: "))
-    hb_history[date] = hb
 
-print(f"\nHi {name}, here is your Hemoglobin Bar Chart:")
-for gender, hb in hb_history.items():
-    bars = "▓" * int(hb * 2)  # Scale as needed
-    print(f"{date} | {bars:<40} {hb}")
+def print_hb_chart(hb_history):
+    print("\nHemoglobin Chart:\n")
+    for date, hb in hb_history.items():
+        bars = "▓" * int(hb * 2)
+        print(f"{date} | {bars:<20} {hb}")
+
+
+def main():
+    print("Welcome to Vitals Tracker!")
+    name = input("What is your name? ")
+
+    hb_history = collect_hb_history()
+    print(f"\nHi {name}, here is your Hb history:")
+    print(hb_history)
+
+    print_hb_chart(hb_history)
+
