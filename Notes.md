@@ -1,22 +1,23 @@
 📝 Notes  
 --------
-- 🔁 for loop  
-  Used to repeat an action a fixed number of times.
+- ➰ Looping through a dictionary  
+  Use `.items()` to get both key and value in a loop:
 
-  Example:
   ```python
-    for i in range(3):
-        print("Hello!")
+  for key, value in some_dict.items():
+      print(key, value)
   ```
-  This will print "Hello!" three times.
 
-- 🗂️ Dictionary  
-  A way to store key → value pairs. You can look up values using keys.
-  Example:
+- 🔁 String multiplication  
+Repeat a character using *:
   ```python
-    scores = {}
-    scores["Alice"] = 90
-    scores["Bob"] = 85
-
-    print(scores["Alice"])  # prints 90
+    print("▓" * 10)  # ▓▓▓▓▓▓▓▓▓▓
   ```
+
+- 🧾 f-string formatting  
+  You can control width and alignment in f-strings:
+  ```python
+    print(f"{label} | {bar:<20} {value}")
+  ```
+
+  :<20 → left-align to 20 characters (helps make the chart neat)

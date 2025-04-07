@@ -9,7 +9,9 @@ hb_history = {}
 for i  in range(entry_count):
     date = input("Enter date (YYYY-MM-DD): ")
     hb = float(input("Enter Hb value for that date: "))
-    hb_history[name] = hb
+    hb_history[date] = hb
 
-print(f"\nHi {name}, here is your Hb history:")
-print(hb_history)
+print(f"\nHi {name}, here is your Hemoglobin Bar Chart:")
+for gender, hb in hb_history.items():
+    bars = "▓" * int(hb * 2)  # Scale as needed
+    print(f"{date} | {bars:<40} {hb}")

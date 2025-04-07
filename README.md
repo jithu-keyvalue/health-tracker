@@ -1,17 +1,17 @@
-Step 04 – Track Hb by Date
-===========================
+Step 05 – Bar Chart Print
+=========================
 
 💭 Problem / Pain  
 -----------------
-You're only checking hemoglobin once — but you want to track it over time to see how it's changing.
+You have Hb values over time, but reading numbers isn't easy.  
+You want a simple visual to spot trends.
 
 🛠️ Tasks  
 ---------
-- Fix the issue in saving Hb value in dictionary
+- Fix the issue while reading values from dictionary for printing
 
 ✅ Check  
 --------
 - Run `python program.py`
-- Enter multiple dates + Hb values
-- See output like:
-  `{'2024-03-01': 13.2, '2024-04-01': 13.7}`
+- Enter multiple date + Hb values
+- See the trend visually.
