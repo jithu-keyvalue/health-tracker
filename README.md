@@ -1,21 +1,22 @@
-Step 01 – Hello, Python
-=======================
+Step 02 – User Input
+====================
 
-💭 Problem / Pain
+💭 Problem / Pain  
 -----------------
-You’ve just cloned the repo — now you want to *see it work*. Something. Anything.
+You want your program to do more than just printing hardcoded text.
 
-🛠️ Tasks
---------
-- Update `program.py` script to print your name.
+🛠️ Tasks  
+---------
+- Update the script to greet using the name given by user
 
-✅ Check
+✅ Check  
 --------
-- Run `python program.py` (or `python3 program.py`)
-- See your name printed in the terminal
- 
-🧠 What You Learnt
+- Run `python program.py`
+- It asks for your name
+- It should prints: `Hello, <your name>!`
+
+🧠 What You Learnt  
 ------------------
-- How to run a Python script
-- How to print messages to the terminal
-- How to write and run your first line of Python code
+- How to accept user input during runtime  
+- How to store input in a variable  
+- How to use that variable in a `print()` statement  

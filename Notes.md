@@ -1,18 +1,19 @@
-📝 Notes
+📝 Notes  
 --------
-- 🐍 What is Python?  
-    A general-purpose, high-level language. Commonly used for backend, scripting, automation, data, and AI. Clean syntax, easy to pick up, extremely powerful.
+- 🧍‍♂️ input()  
+  Pauses the program and waits for the user to type something.
 
-- ▶️ How to run a Python file  
-    `python program.py`
-    python is the command to run the Python interpreter. It executes the code inside program.py line by line.
+  ```python
+  name = input("Enter your age: ")
+  ```  
+  The message inside input() is shown as a prompt.
 
-- 🖨️ What does print() do?  
-    It writes text to the terminal.
+- 📦 Variables  
+  You can store the result of input() in a variable to reuse it.
 
-- 🧵 Strings in Python  
-    Text inside 'single' or "double" quotes:
-    ```
-    print("hello")
-    print('world')
-    ```
+- 🔤 f-strings  
+  Use f"..." to insert variables directly into strings.
+  ```python
+  print(f"You are {age} years old!")
+  ```
+
