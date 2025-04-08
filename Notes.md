@@ -1,18 +1,55 @@
 📝 Notes  
 --------
-- 📮 POST request:  
-  Used to send data in the request **body** — good for larger or private data (not visible in URL or logs).
 
-- 📥 Request body as dict:  
-  FastAPI can auto-parse JSON into a Python `dict`.  
-  Then you can use `.get()` to access values.
+- 📦 Pydantic Model  
+  Used to define the structure and validation rules for request/response.
 
-- 📄 `csv.writer`:  
-  Used to write rows into a CSV file.  
-  Open the file in append mode (`"a"`) and use `writer.writerow(...)`.
+  ```python
+  from pydantic import BaseModel, Field
 
-- 📁 `os.path.exists()`:  
-  Checks if a file already exists.
+  class Observation(BaseModel):
+      date: str
+      hb: float
+  ```
 
-- 📑 Constant naming:  
-  File-level constants like `CSV_FILE` are written in **ALL_CAPS**.
+- Use Field() to add extra rules:  
+
+  ```python
+  date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$")
+  hb: float = Field(..., gt=0)
+  ```
+
+
+- 🔁 CSV DictReader  
+  Reads each row as a dictionary, with keys from the header row.
+
+- 📊 Sorting with sort()  
+  Sorts a list of dicts by a field (like date string).
+
+  ```python
+  data.sort(key=lambda r: r["date"])
+  ```
+
+- 🧪 Response Model (List[])  
+  You can return a list of models like this:
+
+  ```python
+  from typing import List
+
+  @app.get("/observations", response_model=List[Observation])
+  ```
+  
+  This tells FastAPI what the output should look like.
+  - converts raw data into typed, validated objects  
+  - powers Swagger docs
+
+- 🎛️ Pagination with Query Params  
+  skip and limit are passed like this: `/observations?skip=2&limit=5`
+  
+  FastAPI auto-converts them to integers: `def get(skip: int = 0, limit: int = 10):`
+
+- 🔢 Slicing with skip & limit - used for pagination:
+  ```python
+  data = ["a", "b", "c", "d", "e"]
+  data[1 : 1 + 2]  # → ['b', 'c']
+  ```

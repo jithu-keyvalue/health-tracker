@@ -1,24 +1,18 @@
-Step 12 – POST Observation (Save to CSV)
-========================================
+Step 13 – Get & Validate Observations
+=====================================
 
 💭 Problem / Pain  
 -----------------
-You can’t track health data unless it's stored somewhere.  
-Let's enter data in frontend and save it in backend.
+You're saving health data, but can't view it.  
+Also, inputs aren't being validated — a broken value can pollute the file.
 
 🛠️ Tasks  
 ---------
-- Somehow the data is not getting saved in the csv in the proper way. Fix this.
+- Nice that we are using pydantic model to validate, but the rule we've configured for hb value has an issue. It is not allowing values below 30.
+- Also, are we sorting the entries by hb while getting? Let's sort it by date.
 
 ✅ Check  
 --------
 - Run the app: `uvicorn main:app --reload`
-- Open `/docs`, post this:
-
-  ```json
-  {
-    "date": "2024-04-10",
-    "hb": 13.5
-  }
-  ```
-- Check that observations.csv is created and contains correct data
+- Try POST-ing valid & invalid records via `/docs`
+- GET `/observations` and test `skip` / `limit`
