@@ -1,8 +1,8 @@
-print("Welcome to Vitals Tracker!")
+print("Welcome to Health Tracker!")
 
 name = input("What is your name? ")
 gender = input("What is your gender? (male/female): ")
-hb = float(input("Enter your hemoglobin (Hb) value: "))
+hb = float(input("Enter your haemoglobin (Hb) value: "))
 
 # 🧪 Hb Level Check Rule
 # ----------------------
@@ -17,4 +17,4 @@ elif gender == "female" and hb < 12:
 else:
     status = "Normal"
 
-print(f"Hello, {name}! Your hemoglobin level is {gender}.")
+print(f"Hello, {name}! Your haemoglobin level is {gender}.")
