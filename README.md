@@ -1,17 +1,24 @@
-Step 11 – Query Param + Swagger
-===============================
+Step 12 – POST Observation (Save to CSV)
+========================================
 
 💭 Problem / Pain  
 -----------------
-You want to say hello to users dynamically, without hardcoding a name in the backend.  
-Also, is there a more convenient way to test APIs?
+You can’t track health data unless it's stored somewhere.  
+Let's enter data in frontend and save it in backend.
 
 🛠️ Tasks  
 ---------
-- Currently we don't get the name from query parameter in response. Fix this.
+- Somehow the data is not getting saved in the csv in the proper way. Fix this.
 
 ✅ Check  
 --------
-- Run: `uvicorn main:app --reload`
-- Test in browser: `http://localhost:8000/hello?name=javed`
-- Test in Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Run the app: `uvicorn main:app --reload`
+- Open `/docs`, post this:
+
+  ```json
+  {
+    "date": "2024-04-10",
+    "hb": 13.5
+  }
+  ```
+- Check that observations.csv is created and contains correct data

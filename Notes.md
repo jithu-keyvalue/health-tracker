@@ -1,32 +1,18 @@
 📝 Notes  
 --------
+- 📮 POST request:  
+  Used to send data in the request **body** — good for larger or private data (not visible in URL or logs).
 
-- ❓ Query Parameters:  
-  Extra values passed in the URL after `?`. Common for filters, inputs, etc.
+- 📥 Request body as dict:  
+  FastAPI can auto-parse JSON into a Python `dict`.  
+  Then you can use `.get()` to access values.
 
-  ```url
-  /greet?name=Alice
-  ```
+- 📄 `csv.writer`:  
+  Used to write rows into a CSV file.  
+  Open the file in append mode (`"a"`) and use `writer.writerow(...)`.
 
-- 🧾 OpenAPI:  
-  An industry standard that defines what your API can do (routes, inputs, outputs).  
-  FastAPI generates it automatically using type hints.
+- 📁 `os.path.exists()`:  
+  Checks if a file already exists.
 
-- 🧪 Swagger UI:  
-  A browser-based UI to explore and test your API.  
-  Open http://localhost:8000/docs  
-  No Postman needed — click, fill, test.  
-
-- 🔤 Type Hints (like `name: str`):  
-  Type hints tell Python (and FastAPI) what kind of value is expected.
-
-  ```python
-  def greet(name: str):
-      ...
-  ```
-
-  Used by FastAPI to:
-    - ✅ Validate inputs automatically  
-      → Wrong type? You get a `422 Unprocessable Entity`  
-    - 🧾 Generate docs and input fields in Swagger  
-    - 💡 Improve editor suggestions and catch bugs early
+- 📑 Constant naming:  
+  File-level constants like `CSV_FILE` are written in **ALL_CAPS**.
