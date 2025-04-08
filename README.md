@@ -21,9 +21,3 @@ You want to check if your hemoglobin level is okay — but right now, the progra
 - How to use `if-else` for conditional logic  
 - How to combine multiple inputs and print dynamic results  
 
-
-🧪 Hb Level Check Rule
-----------------------
-- If male and Hb < 13 → "Low"
-- If female and Hb < 12 → "Low"
-- Else → "Normal"
