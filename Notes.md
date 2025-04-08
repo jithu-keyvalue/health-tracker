@@ -12,9 +12,16 @@
 - 🖨️ What does print() do?  
     It writes text to the terminal.
 
+- 🚫 No semicolons or parentheses required (usually)  
+  Clean, minimal syntax:
+    ```python
+    print("hello")  # ✅
+    print("hello"); # ❌ (works, but not Pythonic)
+    ```
+    
 - 🧵 Strings in Python  
     Text inside 'single' or "double" quotes:
-    ```
+    ```python
     print("hello")
     print('world')
     ```
