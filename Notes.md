@@ -18,3 +18,9 @@
   - To organize your code
   - To avoid repetition
   - To make each part easier to understand and test
+
+- ⚙️ **Functions** naming convention    
+  Use **lowercase_with_underscores** (a.k.a. snake_case).
+
+  ✅ `print_hb_chart()`, `load_from_csv()`  
+  ❌ `PrintHbChart()`, `loadFromCSV()`

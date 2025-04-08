@@ -18,7 +18,7 @@ def print_hb_chart(hb_history):
 
 
 def main():
-    print("Welcome to Vitals Tracker!")
+    print("Welcome to Health Tracker!")
     name = input("What is your name? ")
 
     hb_history = collect_hb_history()
