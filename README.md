@@ -1,18 +1,21 @@
-Step 09 – Input Validation & Modules
-====================================
+Step 10 – Start FastAPI
+========================
 
 💭 Problem / Pain  
 -----------------
-The program is growing — it's hard to read, test, or extend when everything is in one file.  
-Also, inputs can be invalid or messy, leading to crashes or bad data.
+So far, we’ve been using Python as a CLI script.
+We need to turn this into a real web backend so it can talk to the outside world.
 
 🛠️ Tasks  
 ---------
-- There is something wrong in `main.py` around how we use `print_chart`. Fix it.
+- Create a virtual environment: `python3 -m venv .venv`
+- Activate the env: `source .venv/bin/activate`
+- Install FastAPI, Uvicorn: `pip install -r requirements.txt`
+- Make GET /hello endpoint in `main.py` say hello to you (have your name in API response)
 
 ✅ Check  
 --------
-- Run `python main.py`
-- Try invalid name/date/Hb — it should handle and re-prompt
-- Check the file: `<name>.csv` gets created with valid data
-- Code is organized across smaller, focused files
+- Run the server:  
+  `uvicorn main:app --reload`  
+- Visit: [http://localhost:8000/hello](http://localhost:8000/hello)  
+- You should see: `"Hello <your name>"`

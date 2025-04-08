@@ -1,39 +1,65 @@
 📝 Notes  
 --------
 
-- 📦 Python modules:  
-  Any `.py` file is a module. You can import functions from it:
+- 🌍 Web app basics:  
+    - A **web server** is just a program that listens on a **port** (like 8000) and responds to **HTTP requests** (GET, POST, etc.).  
+    - Your browser sends a GET request, the server sends back a response (like JSON or HTML).
 
-  ```python
-  from validation import get_date
+- 🌐 What is an API?  
+    - An **API (Application Programming Interface)** lets one program talk to another — usually over the internet.  
+    - A web API uses **HTTP methods** (like GET, POST) and **URLs** (like `/observations`) to let you send or receive data.
+
+  Example:
+
+  - `GET /hello` → returns a message
+  - `POST /observations` → sends data to store
+
+  Your browser, frontend, or Postman can all talk to an API.
+
+- 🧪 `venv` – Virtual Environment:  
+  Keeps your project’s Python packages isolated from system-wide Python.
+
+  ```bash
+  python -m venv .venv
+  source .venv/bin/activate
   ```
 
--  🧱 Why split code?  
-    - Easier to test
-    - Easier to read
-    - Easier to extend (add weight later, for example)
+- 📦 `pip`:  
+  Python’s package installer. Used to install libraries like FastAPI, Uvicorn, etc.
+  ```bash
+  pip install fastapi uvicorn
+  ```
 
-- 🧼 File naming tip:
-    - Keep module names lowercase (e.g., chart.py, storage.py)
-    - ✅ `validation.py`, `chart.py`  
-    - ❌ `Validation.py`, `Chart.py`
-
-- 🔍 `re.match()`  
-  Regular expressions: Use the `re` module to check if a string matches a pattern.
-
-  ```python
-  import re
-
-  re.match(r"^\d{4}-\d{2}-\d{2}$", "2024-04-07")  # ✅ match
-  re.match(r"^\d{4}-\d{2}-\d{2}$", "07-04-2024")  # ❌ no match
-  ```  
+- 🧾 `requirements.txt`:
+  A plain text file that lists the packages your project needs.
   
-  This pattern checks if the string looks like a valid YYYY-MM-DD date.  
-  📌 Tip: re.match() returns None if it doesn't match. Use it in an if condition.
+  ```bash
+  fastapi
+  uvicorn
+  ```
+
+  You install all dependencies listed in it using: `pip install -r requirements.txt`
+
+- FastAPI: A Python framework to build APIs quickly and clearly.
+
+- ⚡ ASGI / Uvicorn:  
+  - FastAPI apps use the ASGI (Asynchronous Server Gateway Interface) standard.
+  - ASGI defines how python webapps(like FastAPI apps) talk to web servers(like uvicorn).
+  - Uvicorn is the ASGI server that runs your app.
+
+- `uvicorn main:app --reload`
+    - `main`: the Python file (`main.py`)
+    - `app`: the FastAPI instance inside that file
+    - `--reload`: auto-restart when code changes (for development)
+
+- ⚙️ FastAPI App:  
+  Create an instance of the app:
 
   ```python
-  if re.match(...):
-      # valid
-  else:
-      # invalid
+  from fastapi import FastAPI
+  app = FastAPI()
   ```
+
+- 🔁 `@app.get("/hello")`:  
+  A route that responds to GET /hello requests.  
+  You can also use @app.post(...), @app.put(...), etc.
