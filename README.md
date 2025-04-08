@@ -1,21 +1,17 @@
-Step 10 – Start FastAPI
-========================
+Step 11 – Query Param + Swagger
+===============================
 
 💭 Problem / Pain  
 -----------------
-So far, we’ve been using Python as a CLI script.
-We need to turn this into a real web backend so it can talk to the outside world.
+You want to say hello to users dynamically, without hardcoding a name in the backend.  
+Also, is there a more convenient way to test APIs?
 
 🛠️ Tasks  
 ---------
-- Create a virtual environment: `python3 -m venv .venv`
-- Activate the env: `source .venv/bin/activate`
-- Install FastAPI, Uvicorn: `pip install -r requirements.txt`
-- Make GET /hello endpoint in `main.py` say hello to you (have your name in API response)
+- Currently we don't get the name from query parameter in response. Fix this.
 
 ✅ Check  
 --------
-- Run the server:  
-  `uvicorn main:app --reload`  
-- Visit: [http://localhost:8000/hello](http://localhost:8000/hello)  
-- You should see: `"Hello <your name>"`
+- Run: `uvicorn main:app --reload`
+- Test in browser: `http://localhost:8000/hello?name=javed`
+- Test in Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
