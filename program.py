@@ -1,4 +1,4 @@
-print("Welcome to Vitals Tracker!")
+print("Welcome to Health Tracker!")
 
 name = input("What is your name? ")
 gender = input("What is your gender? (male/female): ")
@@ -11,7 +11,7 @@ for i  in range(entry_count):
     hb = float(input("Enter Hb value for that date: "))
     hb_history[date] = hb
 
-print(f"\nHi {name}, here is your Hemoglobin Bar Chart:")
+print(f"\nHi {name}, here is your Haemoglobin Bar Chart:")
 for gender, hb in hb_history.items():
     bars = "▓" * int(hb * 2)  # Scale as needed
     print(f"{date} | {bars:<40} {hb}")
