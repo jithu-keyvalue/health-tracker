@@ -1,1 +1,1 @@
-# vitals-tracker
+# health-tracker
