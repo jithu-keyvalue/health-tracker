@@ -20,3 +20,9 @@
 
     print(scores["Alice"])  # prints 90
   ```
+
+- 📦 **Variables**  
+  Naming convention: **lowercase_with_underscores**
+
+  ✅ `hb_history`, `entry_count`, `filename`  
+  ❌ `HbHistory`, `EntryCount`, `FileName`
