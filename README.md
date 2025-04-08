@@ -1,23 +1,18 @@
-Step 03 – Basic Health Check
-============================
+Step 09 – Input Validation & Modules
+====================================
 
 💭 Problem / Pain  
 -----------------
-You want to check if your hemoglobin level is okay — but right now, the program doesn’t know how to evaluate anything.
+The program is growing — it's hard to read, test, or extend when everything is in one file.  
+Also, inputs can be invalid or messy, leading to crashes or bad data.
 
 🛠️ Tasks  
 ---------
-- Fix the issue while printing the Hb status
+- There is something wrong in `main.py` around how we use `print_chart`. Fix it.
 
 ✅ Check  
 --------
-- Run `python program.py`
-- It asks for gender and Hb
-- It prints if the value is normal or low (based on basic rules)
-
-🧠 What You Learnt  
-------------------
-- How to read numeric input from the user  
-- How to use `if-else` for conditional logic  
-- How to combine multiple inputs and print dynamic results  
-
+- Run `python main.py`
+- Try invalid name/date/Hb — it should handle and re-prompt
+- Check the file: `<name>.csv` gets created with valid data
+- Code is organized across smaller, focused files
