@@ -45,7 +45,7 @@ def save_hb_to_csv(hb_history, filename="hb_data.csv"):
 
 
 def main():
-    print("Welcome to Vitals Tracker!")
+    print("Welcome to Health Tracker!")
     name = input("What is your name? ")
 
     hb_history = load_hb_from_csv()
