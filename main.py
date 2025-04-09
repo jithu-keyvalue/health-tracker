@@ -74,6 +74,6 @@ def get_observations(skip: int = 0, limit: int = 10):
         )
         observations.append(obs)
 
-    logger.error(f"Returned {len(observations)} observations.")
+    logger.info(f"Returned {len(observations)} observations.")
 
     return observations

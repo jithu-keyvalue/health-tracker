@@ -1,70 +1,66 @@
 📝 Notes  
 --------
 
-- 🌐 CORS (Cross-Origin Resource Sharing)  
-  By default, a website can only make requests to the same domain it came from. 
-  
-  - If your HTML is served from one place (like localhost:8000) and tries to talk to an API on another (like localhost:8001), the browser blocks it unless the server explicitly allows it. 
+- 🐳 Docker  
+  A tool to run apps in lightweight containers that bundle code + dependencies.  
+  Great for consistent environments across dev and prod.
 
-  - This prevents malicious websites from secretly calling your APIs using a user’s browser.
-
-
-- CORS: example
-    - You’re logged into your account on aic.com (AI Coach backend).
-    - You visit a random blog at shadytricks.com.
-    - That site secretly runs JavaScript to call aic.com/api/users/231 (maybe to delete your account).
-    - Your browser sees that this request is from a different origin (shadytricks.com → aic.com) and pauses it.
-    - It asks aic.com via a preflight request: “Should I allow requests from shadytricks.com?”
-    - If aic.com replies with Access-Control-Allow-Origin: shadytricks.com, the browser lets it through.
-    - If not (which is the secure default), the browser blocks it.
-    - CORS makes sure only trusted origins (like app.aic.com) can access protected APIs on your behalf.
-
-- origin - protocol + domain + port  
-    - http://localhost:8000 and http://localhost:8001 are distinct origins  
-    - http://localhost:8000 & file://... (null origin) are also different origins.
-
-- 🌍 http.server  
-Used to serve static frontend files (like signup.html) via a local web server. Required for browser to treat it as a real website.
+- 🧩 Docker Compose  
+  Lets you define and run multi-container setups (like app + db) using `docker-compose.yml`.
 
   ```bash
-  cd ui
-  python3 -m http.server 8001
+  docker compose up
   ```
 
-- 🧠 JS fetch()  
-  Used to make API calls from the browser.
+- 🗃️ Postgres  
+  A popular open-source SQL database used to store structured data (users, health records, etc.).
 
-  ```javascript
-  fetch("/observations", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ date, hb })
-  });
-  ```
-
-
-- 🪵 Logging  
-  - Use `logging` instead of `print()` — it's structured, configurable, and works in production.
-
-  ```python
-  import logging
-  logging.basicConfig(level=logging.INFO)
-  logger = logging.getLogger(__name__)
-  logger.info("User 6242 created request 2314")
-  ```
+- 🔐 Environment Variables  
+  Keep secrets and config (like DB passwords) out of the main file.
+  Stored in a .env file (e.g. docker.env).
 
   ```bash
-  2025-04-09 14:24:11,024 [ERROR] User 6242 created request 2314.
+  POSTGRES_DB=healthdb
+  POSTGRES_USER=healthuser
+  POSTGRES_PASSWORD=supersecret
   ```
 
-- 📊 Log Levels:  
-  - DEBUG	Internal details (dev only)
-  - INFO	Normal app events (requests, saves)
-  - WARNING	Something odd, but not broken
-  - ERROR	Failures that need attention
+- 📦 Special Postgres vars  
+  These variable names are required by the official Postgres Docker image:
+  - POSTGRES_DB
+  - POSTGRES_USER
+  - POSTGRES_PASSWORD
 
+- 🪣 Volumes  
+  Used to persist DB data even if the container stops or is removed.
 
-- 🛠️ Why not print()?  
-  - Only prints to local terminal  
-  - Not captured by log files or cloud log collectors  
-  - `logging` is structured and works everywhere
+  ```bash
+  volumes:
+    - pgdata:/var/lib/postgresql/data
+  ```
+
+  - To delete volume & start clean:
+
+  ```bash
+  docker compose down -v
+  docker compose up
+  ```
+
+- 🏷️ Container Name  
+  Makes it easy to refer to the container by name: `container_name: health-db`
+
+- 🌐 Port Mapping  
+  Maps container's port to your machine.
+
+  ```bash
+  "5433:5432"  # access DB via localhost:5433
+  ```
+
+- 🧪 Test the DB
+  ```bash
+  docker exec -it health-db psql -U healthuser -d healthdb
+  ```
+
+  Inside Postgres shell: `SELECT NOW();`
+
+  Returns the current DB time — confirms the DB is live and responding.

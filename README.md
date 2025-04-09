@@ -1,25 +1,20 @@
-Step 14 – Frontend UI + CORS
-============================
+Step 15 – Setup Postgres with Docker Compose
+============================================
 
 💭 Problem / Pain  
 -----------------
-Your API works — but users can’t interact with it visually.  
-Also, browsers block frontend → backend calls unless CORS is allowed.
+CSV is great for early steps, but not reliable for real apps.  
+We need a proper database to persist and query health data.
 
 🛠️ Tasks  
 ---------
-- Unable to add new observations from frontend. Is everything alright with the POST API call?
-- Logging is fine, but why are we using "error" log level for a simple info?
+docker-compose.yml file got some error. We are not specifying the right file name for env it seems.
 
 ✅ Check  
 --------
-
-- In one terminal (FastAPI backend): `uvicorn main:app --reload`
-- In another terminal (Frontend):
-    ```bash
-    cd ui
-    python3 -m http.server 8001
-    ```
-- Open: http://localhost:8001
-- Should see existing entries
-- Submit a new entry → it should appear in the list
+- Run the DB container using `docker compose up`
+- Connect to the DB manually using `psql` and verify it's working:
+  ```bash
+  docker exec -it health-db psql -U healthuser -d healthdb
+  ```
+- Verify DB is live. Run inside Postgres shell: `SELECT NOW();`

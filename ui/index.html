@@ -87,7 +87,7 @@
       const date = document.getElementById("date").value;
       const hb = parseFloat(document.getElementById("hb").value);
 
-      const response = await fetch(`${API}/hb-values`, {
+      const response = await fetch(`${API}/observations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date, hb })
