@@ -1,20 +1,28 @@
-Step 16 – Connect FastAPI to Postgres (Raw)
-===========================================
+Step 17 – Save & Fetch Observations (Raw SQL)
+=============================================
 
 💭 Problem / Pain  
 -----------------
-The database is running, but your app isn’t talking to it yet.  
-Let’s connect to Postgres and fetch something simple — like the current DB time.
+Time to start saving data in DB.  
+We'll create the table manually and use raw SQL to insert and fetch data.
 
 🛠️ Tasks  
 ---------
-- DB time API works, but incorrect time value. Can you see how to get the correct time value?   
-[hint: use print() to see what values any intereting variables have during request processing]
+- See the `schema.sql` file. There is a command in the next section that shows how to run this so that we get our first DB table created. But ...
+- Before that we better choose a better name for the column for storing haemoglobin values (use `hb`)
+- Once you run the command to create table, try running the app. 
+- See if you get any issues in the console(where you run Fastapi app). Fix that.
 
 ✅ Check  
 --------
-- Install new deps (psycopg2-binary, python-dotenv): `pip install -r requirements.txt`
-- Start Postgres container (if not already running): `docker compose up`
-- Start FastAPI app: `uvicorn main:app --reload`
-- Visit: `http://localhost:8000/db-time`
-- You should see the current timestamp returned from Postgres
+- Start Postgres DB (if not running): `docker compose up`
+- Create table: `docker exec -i health-db psql -U healthuser -d healthdb < schema.sql`
+- Run backend: `uvicorn main:app --reload`
+- Serve frontend: 
+  ```bash
+  cd ui
+  python3 -m http.server 8001
+  ```
+- Open frontend: http://localhost:8001
+- Add an observation (date + hb)
+- Confirm it shows up in the list

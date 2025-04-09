@@ -1,46 +1,42 @@
 📝 Notes  
 --------
 
-- 🐘 psycopg2  
-  A Python library to connect and interact with a Postgres DB.
+- 📄 CREATE TABLE  
+  SQL command to define your table structure.
 
-  ```python
-  import psycopg2
-  conn = psycopg2.connect(...)
+- 🔁 CREATE TABLE IF NOT EXISTS  
+  Only creates the table if it doesn’t already exist — avoids errors on rerun.
+
+- 🔢 SERIAL  
+  Auto-incrementing integer — useful for IDs (id SERIAL PRIMARY KEY).
+
+- 📝 INSERT INTO (...) VALUES (...)  
+  Used to add new rows to the table.
+
+  ```sql
+  INSERT INTO observations (date, hb) VALUES ('2024-04-10', 13.5);
   ```
 
-- 🔌 Database Connection  
-  Like opening a live session with the database — needed to send queries.
+- 📥 SELECT ... ORDER BY  
+  Used to fetch rows, sorted by a column.
 
-- 🧭 Cursor  
-  Once connected, the cursor is your "command prompt" inside the DB — used to run SQL and fetch results.
-
-  ```python
-  cur = conn.cursor()
-  cur.execute("SELECT NOW()")
-  result = cur.fetchone()
+  ```sql
+  SELECT date, hb FROM observations ORDER BY date;
   ```
 
-- 📥 cur.fetchone()   
-  Fetches **a single row** from the result of a SQL query.
-    - Returns a tuple: e.g. `("2024-04-10 17:42:01.123456",)`
-    - Use when expecting **one result only** (like `SELECT NOW()`)
+- 📑 OFFSET + LIMIT  
+  Used for pagination — skips and limits results.
 
-- 🚪 cursor.close()  
-  Tells Postgres you're done running queries.
-  Frees up memory, locks, and threads on the DB server.
-
-- 🔒 connection.close()  
-  Ends the session with the database.
-  Important: avoids exhausting the DB’s limited connection pool.
-
-- 🌍 os.getenv(...)  
-  Used to fetch environment variable values in Python — clean way to load secrets/config.
-
-  ```python
-  os.getenv("DB_PASSWORD")
+  ```sql
+  SELECT ... ORDER BY date OFFSET 0 LIMIT 10;
   ```
 
-- 🗂️ .env vs docker.env  
-  - .env - used by FastAPI app	(Python reads this via dotenv)
-  - docker.env - used by Docker Compose	(Used to configure containers. e.g. Postgres image)
+- 📦 cur.fetchone()  
+  Fetches a single row from the SELECT result. Use when expecting just one row.
+
+- 📦 cur.fetchall()  
+  Fetches all rows as a list of tuples.
+
+- 🧾 conn.commit()  
+  Saves any changes made (e.g. inserts).  
+  Without this, the changes are discarded when the connection closes.

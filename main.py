@@ -1,28 +1,24 @@
 import os
-import csv
-import psycopg2
 import logging
-from fastapi import FastAPI
-from datetime import date
+import psycopg2
+from dotenv import load_dotenv
+from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import List
-from fastapi.middleware.cors import CORSMiddleware
+from datetime import date as DateType
 
-from dotenv import load_dotenv
-
+# Load .env
 load_dotenv()
 
-# --- Setup Logging ---
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-)
-
+# Logging setup
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-
+# FastAPI app
 app = FastAPI()
 
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8001"],
@@ -30,75 +26,47 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-CSV_FILE = "observations.csv"
-
-# --- Models ---
-
+# Pydantic model
 class Observation(BaseModel):
-    date: date
+    date: DateType = Field(..., example="2024-04-10")
     hb: float = Field(..., example=13.5, gt=0)
 
-# --- Routes ---
-
-@app.post("/observations")
-def add_observation(obs: Observation):
-    logger.info(f"New observation received: {obs}")
-
-    file_exists = os.path.exists(CSV_FILE)
-
-    with open(CSV_FILE, "a", newline="") as f:
-        writer = csv.writer(f)
-        if not file_exists:
-            writer.writerow(["date", "hb"])
-        writer.writerow([obs.date, obs.hb])
-
-    return {"message": "Saved", "date": obs.date, "hb": obs.hb}
-
-@app.get("/observations", response_model=List[Observation])
-def get_observations(skip: int = 0, limit: int = 10):
-    logger.info(f"Fetching observations: skip={skip}, limit={limit}")
-
-    if not os.path.exists(CSV_FILE):
-        return []
-
-    with open(CSV_FILE, "r") as f:
-        reader = csv.DictReader(f)
-        data = list(reader)
-
-    # Sort entries
-    data.sort(key=lambda r: r["date"])
-
-    # Slice to get the required page
-    paged = data[skip : skip + limit]
-
-    observations = []
-    for row in paged:
-        obs = Observation(
-            date=row["date"],
-            hb=float(row["hb"])  # CSV reads everything as strings
-        )
-        observations.append(obs)
-
-    logger.info(f"Returned {len(observations)} observations.")
-
-    return observations
-
-
+# DB connection
 def get_db_connection():
     return psycopg2.connect(
         host=os.getenv("DB_HOST", "localhost"),
-        port=os.getenv("DB_PORT", 5432),
+        port=os.getenv("DB_PORT", 5434),
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD")
     )
 
-@app.get("/db-time")
-def get_db_time():
+@app.post("/observations")
+def add_observation(obs: Observation):
+    logger.info(f"Saving observation: {obs}")
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT NOW()")
-    result = cur.fetchone()
+    cur.execute(
+        "INSERT INTO observations (date, hb) VALUES (%s, %s)",
+        (obs.date, obs.hb)
+    )
+    conn.commit()
     cur.close()
     conn.close()
-    return {"db_time": 'time'}
+    return {"message": "Saved", "date": obs.date, "hb": obs.hb}
+
+@app.get("/observations", response_model=List[Observation])
+def get_observations(skip: int = 0, limit: int = 10):
+    logger.info(f"Fetching observations: skip={skip}, limit={limit}")
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT date, hb FROM observation ORDER BY date OFFSET %s LIMIT %s",
+        (skip, limit)
+    )
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    observations = [{"date": r[0], "hb": r[1]} for r in rows]
+    logger.info(f"Returned {len(observations)} rows")
+    return observations
