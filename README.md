@@ -1,18 +1,25 @@
-Step 13 – Get & Validate Observations
-=====================================
+Step 14 – Frontend UI + CORS
+============================
 
 💭 Problem / Pain  
 -----------------
-You're saving health data, but can't view it.  
-Also, inputs aren't being validated — a broken value can pollute the file.
+Your API works — but users can’t interact with it visually.  
+Also, browsers block frontend → backend calls unless CORS is allowed.
 
 🛠️ Tasks  
 ---------
-- Nice that we are using pydantic model to validate, but the rule we've configured for hb value has an issue. It is not allowing values below 30.
-- Also, are we sorting the entries by hb while getting? Let's sort it by date.
+- Unable to add new observations from frontend. Is everything alright with the POST API call?
+- Logging is fine, but why are we using "error" log level for a simple info?
 
 ✅ Check  
 --------
-- Run the app: `uvicorn main:app --reload`
-- Try POST-ing valid & invalid records via `/docs`
-- GET `/observations` and test `skip` / `limit`
+
+- In one terminal (FastAPI backend): `uvicorn main:app --reload`
+- In another terminal (Frontend):
+    ```bash
+    cd ui
+    python3 -m http.server 8001
+    ```
+- Open: http://localhost:8001
+- Should see existing entries
+- Submit a new entry → it should appear in the list

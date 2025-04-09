@@ -1,55 +1,70 @@
 📝 Notes  
 --------
 
-- 📦 Pydantic Model  
-  Used to define the structure and validation rules for request/response.
-
-  ```python
-  from pydantic import BaseModel, Field
-
-  class Observation(BaseModel):
-      date: str
-      hb: float
-  ```
-
-- Use Field() to add extra rules:  
-
-  ```python
-  date: str = Field(..., pattern=r"^\d{4}-\d{2}-\d{2}$")
-  hb: float = Field(..., gt=0)
-  ```
-
-
-- 🔁 CSV DictReader  
-  Reads each row as a dictionary, with keys from the header row.
-
-- 📊 Sorting with sort()  
-  Sorts a list of dicts by a field (like date string).
-
-  ```python
-  data.sort(key=lambda r: r["date"])
-  ```
-
-- 🧪 Response Model (List[])  
-  You can return a list of models like this:
-
-  ```python
-  from typing import List
-
-  @app.get("/observations", response_model=List[Observation])
-  ```
+- 🌐 CORS (Cross-Origin Resource Sharing)  
+  By default, a website can only make requests to the same domain it came from. 
   
-  This tells FastAPI what the output should look like.
-  - converts raw data into typed, validated objects  
-  - powers Swagger docs
+  - If your HTML is served from one place (like localhost:8000) and tries to talk to an API on another (like localhost:8001), the browser blocks it unless the server explicitly allows it. 
 
-- 🎛️ Pagination with Query Params  
-  skip and limit are passed like this: `/observations?skip=2&limit=5`
-  
-  FastAPI auto-converts them to integers: `def get(skip: int = 0, limit: int = 10):`
+  - This prevents malicious websites from secretly calling your APIs using a user’s browser.
 
-- 🔢 Slicing with skip & limit - used for pagination:
-  ```python
-  data = ["a", "b", "c", "d", "e"]
-  data[1 : 1 + 2]  # → ['b', 'c']
+
+- CORS: example
+    - You’re logged into your account on aic.com (AI Coach backend).
+    - You visit a random blog at shadytricks.com.
+    - That site secretly runs JavaScript to call aic.com/api/users/231 (maybe to delete your account).
+    - Your browser sees that this request is from a different origin (shadytricks.com → aic.com) and pauses it.
+    - It asks aic.com via a preflight request: “Should I allow requests from shadytricks.com?”
+    - If aic.com replies with Access-Control-Allow-Origin: shadytricks.com, the browser lets it through.
+    - If not (which is the secure default), the browser blocks it.
+    - CORS makes sure only trusted origins (like app.aic.com) can access protected APIs on your behalf.
+
+- origin - protocol + domain + port  
+    - http://localhost:8000 and http://localhost:8001 are distinct origins  
+    - http://localhost:8000 & file://... (null origin) are also different origins.
+
+- 🌍 http.server  
+Used to serve static frontend files (like signup.html) via a local web server. Required for browser to treat it as a real website.
+
+  ```bash
+  cd ui
+  python3 -m http.server 8001
   ```
+
+- 🧠 JS fetch()  
+  Used to make API calls from the browser.
+
+  ```javascript
+  fetch("/observations", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ date, hb })
+  });
+  ```
+
+
+- 🪵 Logging  
+  - Use `logging` instead of `print()` — it's structured, configurable, and works in production.
+
+  ```python
+  import logging
+  logging.basicConfig(level=logging.INFO)
+  logger = logging.getLogger(__name__)
+  logger.info("User 6242 created request 2314")
+  ```
+
+  ```bash
+  2025-04-09 14:24:11,024 [ERROR] User 6242 created request 2314.
+  ```
+
+- 📊 Log Levels:  
+  - DEBUG	Internal details (dev only)
+  - INFO	Normal app events (requests, saves)
+  - WARNING	Something odd, but not broken
+  - ERROR	Failures that need attention
+
+
+- 🛠️ Why not print()?  
+  - Only prints to local terminal  
+  - Not captured by log files or cloud log collectors  
+  - `logging` is structured and works everywhere
