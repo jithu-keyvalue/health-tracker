@@ -1,20 +1,20 @@
-Step 15 – Setup Postgres with Docker Compose
-============================================
+Step 16 – Connect FastAPI to Postgres (Raw)
+===========================================
 
 💭 Problem / Pain  
 -----------------
-CSV is great for early steps, but not reliable for real apps.  
-We need a proper database to persist and query health data.
+The database is running, but your app isn’t talking to it yet.  
+Let’s connect to Postgres and fetch something simple — like the current DB time.
 
 🛠️ Tasks  
 ---------
-docker-compose.yml file got some error. We are not specifying the right file name for env it seems.
+- DB time API works, but incorrect time value. Can you see how to get the correct time value?   
+[hint: use print() to see what values any intereting variables have during request processing]
 
 ✅ Check  
 --------
-- Run the DB container using `docker compose up`
-- Connect to the DB manually using `psql` and verify it's working:
-  ```bash
-  docker exec -it health-db psql -U healthuser -d healthdb
-  ```
-- Verify DB is live. Run inside Postgres shell: `SELECT NOW();`
+- Install new deps (psycopg2-binary, python-dotenv): `pip install -r requirements.txt`
+- Start Postgres container (if not already running): `docker compose up`
+- Start FastAPI app: `uvicorn main:app --reload`
+- Visit: `http://localhost:8000/db-time`
+- You should see the current timestamp returned from Postgres

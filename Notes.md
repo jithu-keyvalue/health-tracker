@@ -1,66 +1,46 @@
 📝 Notes  
 --------
 
-- 🐳 Docker  
-  A tool to run apps in lightweight containers that bundle code + dependencies.  
-  Great for consistent environments across dev and prod.
+- 🐘 psycopg2  
+  A Python library to connect and interact with a Postgres DB.
 
-- 🧩 Docker Compose  
-  Lets you define and run multi-container setups (like app + db) using `docker-compose.yml`.
-
-  ```bash
-  docker compose up
+  ```python
+  import psycopg2
+  conn = psycopg2.connect(...)
   ```
 
-- 🗃️ Postgres  
-  A popular open-source SQL database used to store structured data (users, health records, etc.).
+- 🔌 Database Connection  
+  Like opening a live session with the database — needed to send queries.
 
-- 🔐 Environment Variables  
-  Keep secrets and config (like DB passwords) out of the main file.
-  Stored in a .env file (e.g. docker.env).
+- 🧭 Cursor  
+  Once connected, the cursor is your "command prompt" inside the DB — used to run SQL and fetch results.
 
-  ```bash
-  POSTGRES_DB=healthdb
-  POSTGRES_USER=healthuser
-  POSTGRES_PASSWORD=supersecret
+  ```python
+  cur = conn.cursor()
+  cur.execute("SELECT NOW()")
+  result = cur.fetchone()
   ```
 
-- 📦 Special Postgres vars  
-  These variable names are required by the official Postgres Docker image:
-  - POSTGRES_DB
-  - POSTGRES_USER
-  - POSTGRES_PASSWORD
+- 📥 cur.fetchone()   
+  Fetches **a single row** from the result of a SQL query.
+    - Returns a tuple: e.g. `("2024-04-10 17:42:01.123456",)`
+    - Use when expecting **one result only** (like `SELECT NOW()`)
 
-- 🪣 Volumes  
-  Used to persist DB data even if the container stops or is removed.
+- 🚪 cursor.close()  
+  Tells Postgres you're done running queries.
+  Frees up memory, locks, and threads on the DB server.
 
-  ```bash
-  volumes:
-    - pgdata:/var/lib/postgresql/data
+- 🔒 connection.close()  
+  Ends the session with the database.
+  Important: avoids exhausting the DB’s limited connection pool.
+
+- 🌍 os.getenv(...)  
+  Used to fetch environment variable values in Python — clean way to load secrets/config.
+
+  ```python
+  os.getenv("DB_PASSWORD")
   ```
 
-  - To delete volume & start clean:
-
-  ```bash
-  docker compose down -v
-  docker compose up
-  ```
-
-- 🏷️ Container Name  
-  Makes it easy to refer to the container by name: `container_name: health-db`
-
-- 🌐 Port Mapping  
-  Maps container's port to your machine.
-
-  ```bash
-  "5433:5432"  # access DB via localhost:5433
-  ```
-
-- 🧪 Test the DB
-  ```bash
-  docker exec -it health-db psql -U healthuser -d healthdb
-  ```
-
-  Inside Postgres shell: `SELECT NOW();`
-
-  Returns the current DB time — confirms the DB is live and responding.
+- 🗂️ .env vs docker.env  
+  - .env - used by FastAPI app	(Python reads this via dotenv)
+  - docker.env - used by Docker Compose	(Used to configure containers. e.g. Postgres image)

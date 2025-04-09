@@ -1,11 +1,16 @@
 import os
 import csv
+import psycopg2
 import logging
 from fastapi import FastAPI
 from datetime import date
 from pydantic import BaseModel, Field
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- Setup Logging ---
 logging.basicConfig(
@@ -77,3 +82,23 @@ def get_observations(skip: int = 0, limit: int = 10):
     logger.info(f"Returned {len(observations)} observations.")
 
     return observations
+
+
+def get_db_connection():
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST", "localhost"),
+        port=os.getenv("DB_PORT", 5432),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD")
+    )
+
+@app.get("/db-time")
+def get_db_time():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT NOW()")
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    return {"db_time": 'time'}
