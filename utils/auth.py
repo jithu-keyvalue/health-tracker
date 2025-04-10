@@ -12,7 +12,7 @@ import uuid
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # JWT secret and algorithm setup
-SECRET_KEY = os.getenv("SECRET_KEY", "mysecretkey")
+SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 
 # Hash password
