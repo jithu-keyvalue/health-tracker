@@ -1,31 +1,34 @@
-Step 19 – Alembic Migrations
-============================
+Step 20 – User Table, Signup, Login, and Profile
+================================================
 
 💭 Problem / Pain  
 -----------------
-We’ve been using `Base.metadata.create_all()` to create tables, but it’s not ideal for managing schema changes over time.  
-Alembic provides an automated way to handle DB schema migrations, keeping track of changes.
+We need to store users securely and authenticate them.  
+This step introduces the **users table**, **signup**, **login**, and **user profile**.
 
-🛠️ Tasks  
----------
-Learn how to generate migrations, and run those migrations by following the step below
+🛠️ Tasks 
+--------
+- Follow the steps below to create tables & Sign up
+- Then you would be able to login
+- But the next call to get the profile info fails. Check whether we are setting the token properly in `index.html` when user logs in.
 
 ✅ Check  
 --------
 Preparing:
-- Remove DB: `sudo docker compose down -v` (because we had already created the observations table manually in the previous step)
-- Create DB: `sudo docker compose up`
-- Install new dependency (alembic): `pip install -r requirements.txt`
-- Create a folder `versions` inside alembic folder
+ - Remove DB: `sudo docker compose down -v` (because going forward this training repo will provide generated scripts - we already learnt how to generate migrations in the last step. So we need to start fresh to make sure revision numbers match for all of us)
+ - Create DB: `sudo docker compose up`
+ - Install new dependency (alembic): `pip install -r requirements.txt`
 
-Creating & running migrations:
-- Generate migration: `alembic revision --autogenerate -m "Create observations table"` (see if you have a new python module generated in `alembic/versions`)
-- Apply migration: `alembic upgrade head`
 
-Testing app:
-- Run backend: `uvicorn main:app --reload`
-- Run frontend: `python -m http.server 8001`
-- Open frontend: http://localhost:8001
-- Test adding an observation
-- Test getting observations
-  
+Create users, observations tables:
+ - Apply migrations: `alembic upgrade head`
+(2 migrations scripts already available in alembic/versions)
+
+Test app:
+ - Run backend: `uvicorn main:app --reload`
+ - Run frontend: `python -m http.server 8001`
+ - Open frontend: http://localhost:8001
+ - Signup first
+ - Try login
+ - Verify you can see profile details
+ 

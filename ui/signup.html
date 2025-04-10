@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Sign In - Health Tracker</title>
+  <title>Sign Up - Health Tracker</title>
   <style>
     body {
       font-family: system-ui, sans-serif;
@@ -40,45 +40,36 @@
     button:hover {
       background: #0056b3;
     }
-
-    .signup-link {
-      text-align: center;
-      margin-top: 20px;
-    }
   </style>
 </head>
 <body>
-  <h2>Health Tracker - Sign In</h2>
+  <h2>Health Tracker - Sign Up</h2>
 
-  <form onsubmit="signin(); return false;">
+  <form onsubmit="signup(); return false;">
+    <input id="name" type="text" placeholder="Full Name" required />
     <input id="email" type="email" placeholder="Email" required />
     <input id="password" type="password" placeholder="Password" required />
-    <button type="submit">Sign In</button>
+    <button type="submit">Sign Up</button>
   </form>
-
-  <div class="signup-link">
-    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
-  </div>
 
   <script>
     const API = "http://localhost:8000";
 
-    async function signin() {
+    async function signup() {
+      const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
-      const res = await fetch(`${API}/login`, {
+      const res = await fetch(`${API}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
 
-      if (data.access_token) {
-        localStorage.setItem("token", "data.access_token");
-        window.location.href = "profile.html";  // Redirect to profile after successful login
-      } else {
-        alert("Login failed. Please check your credentials.");
+      alert(data.message);
+      if (data.message === "User created") {
+        window.location.href = "index.html";  // Redirect to signin after successful signup
       }
     }
   </script>

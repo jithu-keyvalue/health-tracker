@@ -1,6 +1,9 @@
-uvicorn
-fastapi
-psycopg2-binary
-python-dotenv
-sqlalchemy
-alembic
+uvicorn             # ASGI server
+fastapi             # FastAPI web app
+psycopg2-binary     # For Postgres
+python-dotenv       # Reading env
+sqlalchemy          # ORM
+alembic             # DB migrations
+python-jose         # For JWT
+passlib             # For password hashing
+bcrypt              # Another option for password hashing
