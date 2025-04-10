@@ -19,5 +19,5 @@ def add_observation(obs: ObservationIn, db: Session = Depends(get_db), current_u
 
 @router.get("/", response_model=List[ObservationOut])
 def get_observations(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    observations = db.query(Observation).filter(Observation.user_id == "current_user.id").all()
+    observations = db.query(Observation).order_by(Observation.date).filter(Observation.user_id == "current_user.id").all()
     return observations
