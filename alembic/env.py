@@ -25,7 +25,7 @@ config.set_main_option(
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from db.models import Base
+from app.db.models import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

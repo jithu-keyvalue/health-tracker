@@ -1,34 +1,22 @@
-Step 20 – User Table, Signup, Login, and Profile
-================================================
+Step 21 – Link User and Observations, Home Page
+===============================================
 
 💭 Problem / Pain  
 -----------------
-We need to store users securely and authenticate them.  
-This step introduces the **users table**, **signup**, **login**, and **user profile**.
+We need to link the **`User`** and **`Observation`** tables and display observations tied to the currently logged-in user.  
 
 🛠️ Tasks 
 --------
-- Follow the steps below to create tables & Sign up
-- Then you would be able to login
-- But the next call to get the profile info fails. Check whether we are setting the token properly in `index.html` when user logs in.
+- Run the new migration script to add foreign key in Observation table: `alembic upgrade head`
+- When you run the app, there is an issue with listing entries. The API to get observations isn't working properly. Please fix this.
+
 
 ✅ Check  
 --------
-Preparing:
- - Remove DB: `sudo docker compose down -v` (because going forward this training repo will provide generated scripts - we already learnt how to generate migrations in the last step. So we need to start fresh to make sure revision numbers match for all of us)
- - Create DB: `sudo docker compose up`
- - Install new dependency (alembic): `pip install -r requirements.txt`
-
-
-Create users, observations tables:
- - Apply migrations: `alembic upgrade head`
-(2 migrations scripts already available in alembic/versions)
 
 Test app:
  - Run backend: `uvicorn main:app --reload`
  - Run frontend: `python -m http.server 8001`
  - Open frontend: http://localhost:8001
- - Signup first
- - Try login
- - Verify you can see profile details
+ - Test the UI
  

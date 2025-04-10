@@ -1,30 +1,16 @@
-import logging
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, APIRouter, HTTPException
+from app.dependencies import get_current_user
+from app.schemas.user import UserCreate, UserLogin, UserOut, Token
+from app.db.models import User
+from app.dependencies import get_db, get_current_user
+from app.utils.auth import hash_password, verify_password, create_access_token
+from app.logging_config import logger
 from sqlalchemy.orm import Session
-from schemas.user import UserCreate, UserOut, UserLogin, Token
-from db.dependencies import get_db
-from db.models import User
-from utils.auth import hash_password, verify_password, create_access_token, get_current_user
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer
 
-# Setup Logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
-
-# Setup FastAPI app
-app = FastAPI()
-
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:8001"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+router = APIRouter()
 
 
-@app.post("/signup")
+@router.post("/signup")
 def signup(user: UserCreate, db: Session = Depends(get_db)):
     logger.info(f"Signup attempt for email: {user.email}")
     
@@ -43,7 +29,7 @@ def signup(user: UserCreate, db: Session = Depends(get_db)):
     logger.info(f"User created: {new_user.email}")
     return {"message": "User created", "user": {"name": new_user.name, "email": new_user.email}}
 
-@app.post("/login", response_model=Token)
+@router.post("/login", response_model=Token)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     logger.info(f"Login attempt for email: {user.email}")
 
@@ -56,9 +42,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     logger.info(f"Login successful for email: {user.email}")
     return {"access_token": access_token, "token_type": "bearer"}
 
-@app.get("/profile", response_model=UserOut)
-def get_profile(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+@router.get("/profile", response_model=UserOut)
+def get_profile(current_user: User = Depends(get_current_user)):
     logger.info(f"Fetching profile for user: {current_user.email}")
-
-    # Returning the current user
     return current_user

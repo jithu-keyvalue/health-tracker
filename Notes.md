@@ -1,111 +1,111 @@
 📝 Notes
 --------
+- Foreign Key: A column that links one table to another — like a reference. It lets you associate related data.
+  - user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
-- 📦 JWT (JSON Web Token)  
-  Used for authentication and authorization in web applications. Tokens are signed and contain claims about the user.
+     - user_id is the foreign key.
+     - users.id is the target of the foreign key.
+     - this means user_id must match an id from the users table.
 
-  - Structure: A JWT consists of three parts: Header, Payload, and Signature.
-  - Base64-encoded: Both the header and payload are Base64 encoded for transport, but not encrypted.
-  - Signature: This ensures data integrity.
+    This tells DB: every observation belongs to a user from the users table.
 
-- 🎫 Bearer Token  
-  - Authentication token passed in the Authorization header of an HTTP request.
-  - Access Control: Whoever holds the token can use it to access protected resources.
+- APIRouter: a way to organize and modularize your FastAPI app by grouping related endpoints together into separate routers.
 
-  Example header:
-  ```javascript
-  Authorization: Bearer <your_token>
-  ```
+# Relationships
+## Step 1: Just use Foreign Key
 
+```
+class Message(Base):
+    user_id = Column(Integer, ForeignKey("users.id"))
+```
+  - ✅ You can filter messages by user manually: `db.query(Message).filter(Message.user_id == 1).all()`
+  - ✅ Or create linked data like: `new_msg = Message(content="Hello Coach!", user_id=user.id)`
+  - ❌ You can’t access msg.user or user.messages.
 
-- 🔑 Access Token  
-A JWT used to access protected resources. Contains claims like sub (subject) and exp (expiration).
+## Step 2: Add relationship on Message side
+```
+class Message(Base):
+    ...
+    user = relationship("User")
+```
+  - ✅ Now:
+    - `msg = db.query(Message).first()`
+    - `print(msg.user.name)  # ✅ Works!`
+  - ❌ But user.messages still won’t work.
 
-  - sub: Typically stores the user ID or unique identifier (e.g., UUID or user ID).
-  - exp: Token expiration; should be set to limit the token's lifespan (e.g., 15 minutes).
+## Step 3: Add relationship to User side
+```
+class User(Base):
+    ...
+    messages = relationship("Message")
+```
+  - ✅ Now:
+    - `user = db.query(User).first()`
+    - `print(user.messages)  # ✅ list of messages`
+  - ✅ Also possible to create linked data in a more object-style way:
+    - `new_msg = Message(content="Hello Coach!")`
+    - `user.messages.append(new_msg)`
+    - `db.add(user)`
+    - `db.commit()`
+  - ❌ But syncing like this will not work:
+    - `user.messages.append(new_msg)`
+    - `print(new_msg.user)  # ❌ would be None`
 
-  Example to create the access token:  
-  ```python
-  access_token = create_access_token(data={"sub": str(db_user.id)})
-  ```
+## Step 4: Add back_populates on one side (Message)
+```
+class Message(Base):
+    ...
+    user = relationship("User", back_populates="messages")
+```
+  - ✅ Now:
+    - When you do: `msg.user = some_user`, it will auto-add msg to `some_user.messages`.
+    - `msg.user_id` is still set automatically.
+  - ❌ If you do: `user.messages.append(msg)`, it won’t update `msg.user`.
+    - i.e., `msg.user` will still be `None`
+    - `msg.user_id` won’t be set either
 
-- 🔒 Security & Hashing  
-  bcrypt & passlib: Used for password hashing. Storing passwords as plain-text is not secure.
+## Step 5: Add back_populates on both sides
+```
+class User(Base):
+    ...
+    messages = relationship("Message", back_populates="user")
 
-  ```python
-  from passlib.context import CryptContext
-  pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-  hashed_password = pwd_context.hash("password123")
-  ```
+class Message(Base):
+    ...
+    user = relationship("User", back_populates="messages")
+```
+  - ✅  Full two-way sync! Assign either side, the other reflects it.
+```
+# Option 1
+msg = Message(content="Hello")
+msg.user = user
+print(user.messages)  # ✅ msg is inside
 
-  Password Verification: Use pwd_context.verify() to verify a password against the stored hash.
-  ```python
-  pwd_context.verify("password123", hashed_password)
-  ```
+# Option 2
+user.messages.append(msg)
+print(msg.user)       # ✅ shows user
+print(msg.user_id)    # ✅ is set
 
-- 🔑 JWT Token Handling  
-  jwt.encode(): Creates and signs the JWT token with the payload (data) and secret key.
+```
 
-  ```python
-  encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-  ```
+## Lazy loading in SQLAlchemy
+```
+user = db.query(User).first()  # Fetches user only
+print(user.messages)  # Triggers separate SQL to fetch messages
+```
+- the related messages are fetched only if required. This is the 'laziness' part.
+- Saves memory if you don’t always need related data
 
-  jwt.decode(): Decodes the JWT token and validates its signature using the secret key.
-
-  ```python
-  payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-  ```
-
-- Why Signing Is Useful:  
-
-  - Authenticity: It ensures that the token data was created by someone with the secret key (e.g., the server).
-
-  - Prevents Tampering: If anyone changes the data in the token, the signature will no longer be valid, so the server can reject the altered token.
-
-- 🚨 FastAPI Specific  
-  HTTPException: Raises error responses with appropriate status codes.
-
-  ```python
-  raise HTTPException(status_code=400, detail="Invalid credentials")
-  ```
-
-- Status Codes: Common status codes used in authentication.
-  - 401: Unauthorized (invalid or missing token).
-  - 404: Not Found (e.g., user not found).
-
-  Example:
-    ```python
-    raise HTTPException(status_code=401, detail="Invalid token")
-    ```
-
-- 🔐 Session Management  
-  - Stateless authentication: JWT tokens store all session data, so the server doesn't need to remember user states.
-  - LocalStorage: JWT token is stored in the browser's localStorage to maintain user sessions across requests.
-  ```javascript
-  localStorage.setItem("token", access_token);
-  ```
-
-- 🔄 UUID  
-    UUID (Universally Unique Identifier): Used for unique identifiers in distributed systems.
-
-    Example for generating a UUID:
-
-    ```python
-    import uuid
-    user_id = uuid.uuid4()
-    ```
-
-- 🧳 Session Handling  
-    Session: Use SQLAlchemy's Session to interact with the database.
-
-    ```python
-    db_user = db.query(User).filter(User.email == email).first()
-    ```
-
-- 💾 Local Storage  
-    Local Storage: Stores the JWT token in the browser to keep users logged in.
-    Checking Login: The presence of a token in localStorage indicates if the user is logged in.
-
-  ```javascript
-  if(localStorage.getItem("token")) { ... }
-  ```
+## N+1 problem
+```
+users = db.query(User).all()
+for user in users:
+    print(user.messages)  # ❌ N extra queries here! Not good!
+```
+- messages for each user are fetched in separate queries, not efficient
+- solution is eager-loading using `joinedload`
+```
+from sqlalchemy.orm import joinedload
+users = db.query(User).options(joinedload(User.messages)).all()
+```
+- This fetches all users and their messages in a single joined query.
