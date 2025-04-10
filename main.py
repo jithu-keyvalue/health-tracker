@@ -11,8 +11,6 @@ from schemas.observation import ObservationIn, ObservationOut
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
-# Create tables
-Base.metadata.create_all(bind=engine)
 
 # App init
 app = FastAPI()
@@ -36,6 +34,7 @@ def add_observation(obs: ObservationIn, db: Session = Depends(get_db)):
     logger.info(f"Inserting via ORM: {obs}")
     db_obs = Observation(date=obs.date, hb=obs.hb)
     db.add(db_obs)
+    db.commit()
     return {"message": "Saved"}
 
 @app.get("/observations", response_model=List[ObservationOut])
