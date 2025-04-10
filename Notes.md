@@ -1,110 +1,54 @@
 📝 Notes  
 --------
 
-- 🧱 SQLAlchemy ORM  
-  Lets you define tables as Python classes, and rows as Python objects.  
-  No raw SQL needed.
+- 📦 Alembic  
+  A database migration tool for SQLAlchemy. Helps manage schema changes in a structured way.  
+  Creates migration scripts to keep track of DB schema changes over time.
 
-- 🤝 Why ORM?
-  - Cleaner code (no manual SQL)
-  -  Reusable models
-  - Safer queries (built-in escaping)
-  - Easier to test, extend, and refactor
+- 🛠️ Setting Up Alembic  
 
-- 🏗️ ORM Model Definition
-  ```python
-  class Observation(Base):
-      __tablename__ = "observations"
-      id = Column(Integer, primary_key=True)
-      date = Column(Date, nullable=False)
-      hb = Column(Float, nullable=False)
-  ```
-  - Column(...): defines a DB column
+  - Configure DB URL:  
+    In alembic.ini, set the sqlalchemy.url to point to your Postgres DB.
+    ```python
+    sqlalchemy.url = postgresql://healthuser:supersecret@localhost:5434/healthdb
+    ```
 
-  - Integer, Date, Float: column types
+  - Link Models to Alembic:  
+    In alembic/env.py, import Base from db.session and your models, then set target_metadata to Base.metadata.
+    ```python
+    target_metadata = Base.metadata
+    ```
 
-  - nullable=False: column is required (NOT NULL)
+- 🔄 Autogenerate Migrations  
+  Alembic compares your models to the current DB schema and generates migration scripts.
 
-- 🛡️ CheckConstraint
-  Used to enforce rules in DB (e.g., hb must be > 0)
-
-- 🧰 Session & DB Setup
-
-  ```python
-  engine = create_engine(DB_URL)
-  SessionLocal = sessionmaker(bind=engine)
-  Base = declarative_base()
+  ```bash
+  alembic revision --autogenerate -m "Create observations table"
   ```
 
-  - create_engine(...): connects to Postgres
-  - SessionLocal(): creates a session for DB operations
-  - Base: parent for all ORM models
+  This will create a migration file in alembic/versions/.
 
-- 🧪 Session Usage
-  ```python
-  db = SessionLocal()
-  db.add(obj)
-  db.commit()
-  db.query(Model).filter(...).all()
+- ⚡ Apply Migrations  
+  Run migrations to update the DB schema.
+
+  ```bash
+  alembic upgrade head
   ```
 
-  -  add(...): stage a new row
-  - commit(): write it to DB
-  - query(...): fetch rows using ORM
-  - Always close session after use
+  - head applies the most recent migration.
 
-- 🚦 Base.metadata.create_all(engine)  
-  Creates all tables defined by models.
-  - ⚠️ Dev only — we'll replace this with migrations.
+- 🔄 Migrations vs create_all()  
 
-- 🧬 Dependency Injection (DI) 
-  Dependency Injection is a way to automatically provide objects (like DB sessions, config, current user, etc.) to your functions without you manually creating or wiring them each time.
+  - create_all(): Creates tables directly but doesn't track changes.
+  - Migrations: Track schema changes over time, allow for rollback, and are more flexible in production environments.
 
-  ```python
-  def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-  ```
-  - Used with `Depends(get_db)` in FastAPI
-  - The yield gives you a DB session for the request
-  - After response is sent, finally closes the session
-  - This pattern avoids leaks and ensures clean resource use
-  - Easier testing (swap out dependencies)
+- 🎬 Rollback Migrations (Optional)  
+  If you want to undo a migration:
 
-
-🔐 How ORM Protects Against SQL Injection  
------------------------------------------
-
-SQL injection happens when user input is directly added to SQL strings:
-
-- ❌ Raw SQL (vulnerable):
-  ```python
-  user_input = "2024-04-10'); DROP TABLE observations; --"
-  query = f"INSERT INTO observations (date, hb) VALUES ('{user_input}', 13.5);"
-  cursor.execute(query)
+  ```bash
+  alembic downgrade -1 
   ```
 
-  💥 This becomes:
-
-  ```sql
-  INSERT INTO observations (date, hb) VALUES ('2024-04-10');   
-  DROP TABLE observations; -- 
-  ```
-
-- ✅ ORM (safe):
-
-
-  ```python
-  obs = Observation(date="2024-04-10'); DROP TABLE observations; --", hb=13.5)
-  db.add(obs)
-  db.commit()
-  ```
-
-  Under the hood, SQLAlchemy sends: `INSERT INTO observations (date, hb) VALUES (%s, %s)`  
-  With values passed separately: `["2024-04-10'); DROP TABLE observations; --", 13.5]`
-
-  - ✅ Input is treated as data, not SQL
-  - ✅ Injection is blocked by design
+- 🧳 Migration Scripts  
+    - Alembic auto-generates scripts for DB schema changes.
+    - You can manually edit migration scripts for complex changes (like renaming columns).
