@@ -15,7 +15,7 @@ We need to link the **`User`** and **`Observation`** tables and display observat
 --------
 
 Test app:
- - Run backend: `uvicorn main:app --reload`
+ - Run backend: `uvicorn app.main:app --reload`
  - Run frontend: `python -m http.server 8001`
  - Open frontend: http://localhost:8001
  - Test the UI
