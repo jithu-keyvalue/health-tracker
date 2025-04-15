@@ -1,111 +1,104 @@
 📝 Notes
 --------
-- Foreign Key: A column that links one table to another — like a reference. It lets you associate related data.
-  - user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
 
-     - user_id is the foreign key.
-     - users.id is the target of the foreign key.
-     - this means user_id must match an id from the users table.
+- 📤 File Upload (FastAPI)  
+  Endpoint accepts UploadFile using multipart/form-data.
 
-    This tells DB: every observation belongs to a user from the users table.
+  ```python
+  @router.post("/upload")
+  async def upload_file(file: UploadFile = File(...)):
+  ```
 
-- APIRouter: a way to organize and modularize your FastAPI app by grouping related endpoints together into separate routers.
+  In frontend:
 
-# Relationships
-## Step 1: Just use Foreign Key
+    ```javascript
+    const form = new FormData();
+    form.append("file", selectedFile);
 
-```
-class Message(Base):
-    user_id = Column(Integer, ForeignKey("users.id"))
-```
-  - ✅ You can filter messages by user manually: `db.query(Message).filter(Message.user_id == 1).all()`
-  - ✅ Or create linked data like: `new_msg = Message(content="Hello Coach!", user_id=user.id)`
-  - ❌ You can’t access msg.user or user.messages.
+    fetch("/upload", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    ````
 
-## Step 2: Add relationship on Message side
-```
-class Message(Base):
+  FastAPI automatically parses multipart requests and makes file available as UploadFile.
+
+- 🔁 Duplicate File Check  
+  We compute a SHA256 hash of the file content:
+
+  ```python
+  file_hash = hashlib.sha256(content).hexdigest()
+  ```
+
+  This hash is unique to the file contents, so if a user uploads the same file again, we detect it and skip reprocessing.
+
+- ⚙️ Celery – Background Tasks  
+  Celery is a distributed task queue that lets you offload heavy/background jobs like file parsing.
+    - Uses Redis as the message broker
+    - Workers run separately and listen for jobs
+
+  A message broker is a system that acts like a middleman between FastAPI and Celery workers.
+  - FastAPI pushes a job (like process_file) into the broker
+  - Celery worker pulls the job from broker and processes it
+  
+  Setup:
+
+  ```python
+  from celery import Celery
+  celery_app = Celery("myapp", broker="redis://redis:6379/0")
+  ```
+
+  Mark a task:
+
+  ```python
+  @celery_app.task
+  def process_uploaded_file(file_hash, content, user_id):
     ...
-    user = relationship("User")
-```
-  - ✅ Now:
-    - `msg = db.query(Message).first()`
-    - `print(msg.user.name)  # ✅ Works!`
-  - ❌ But user.messages still won’t work.
+  ```
 
-## Step 3: Add relationship to User side
-```
-class User(Base):
-    ...
-    messages = relationship("Message")
-```
-  - ✅ Now:
-    - `user = db.query(User).first()`
-    - `print(user.messages)  # ✅ list of messages`
-  - ✅ Also possible to create linked data in a more object-style way:
-    - `new_msg = Message(content="Hello Coach!")`
-    - `user.messages.append(new_msg)`
-    - `db.add(user)`
-    - `db.commit()`
-  - ❌ But syncing like this will not work:
-    - `user.messages.append(new_msg)`
-    - `print(new_msg.user)  # ❌ would be None`
+  Call the task from FastAPI:
+  ```python
+  process_uploaded_file.delay(file_hash, text, user_id)
+  ```
 
-## Step 4: Add back_populates on one side (Message)
-```
-class Message(Base):
-    ...
-    user = relationship("User", back_populates="messages")
-```
-  - ✅ Now:
-    - When you do: `msg.user = some_user`, it will auto-add msg to `some_user.messages`.
-    - `msg.user_id` is still set automatically.
-  - ❌ If you do: `user.messages.append(msg)`, it won’t update `msg.user`.
-    - i.e., `msg.user` will still be `None`
-    - `msg.user_id` won’t be set either
+  .delay() is a shortcut for queuing a background task.
 
-## Step 5: Add back_populates on both sides
-```
-class User(Base):
-    ...
-    messages = relationship("Message", back_populates="user")
+- 🧠 Redis  
+  In our project, Redis is used as the broker to queue Celery jobs.
 
-class Message(Base):
-    ...
-    user = relationship("User", back_populates="messages")
-```
-  - ✅  Full two-way sync! Assign either side, the other reflects it.
-```
-# Option 1
-msg = Message(content="Hello")
-msg.user = user
-print(user.messages)  # ✅ msg is inside
+  Usage as a cache:
 
-# Option 2
-user.messages.append(msg)
-print(msg.user)       # ✅ shows user
-print(msg.user_id)    # ✅ is set
+  ```python
+  import redis
 
-```
+  r = redis.Redis(host="localhost", port=6379, db=0)
 
-## Lazy loading in SQLAlchemy
-```
-user = db.query(User).first()  # Fetches user only
-print(user.messages)  # Triggers separate SQL to fetch messages
-```
-- the related messages are fetched only if required. This is the 'laziness' part.
-- Saves memory if you don’t always need related data
+  r.set("mykey", "hello")
+  print(r.get("mykey")) 
+  ```
 
-## N+1 problem
-```
-users = db.query(User).all()
-for user in users:
-    print(user.messages)  # ❌ N extra queries here! Not good!
-```
-- messages for each user are fetched in separate queries, not efficient
-- solution is eager-loading using `joinedload`
-```
-from sqlalchemy.orm import joinedload
-users = db.query(User).options(joinedload(User.messages)).all()
-```
-- This fetches all users and their messages in a single joined query.
+
+
+- 📄 PyPDF2 – Reading PDF in Python  
+  PyPDF2 is a library used to read and extract text from PDF files.
+ 
+- 🧬 Data Migration via Alembic  
+  Alembic lets us migrate live data using Python code inside the migration script. This avoids data loss while changing schemas.
+
+- 🤖 OpenAI Chat Completion API
+  We use OpenAI's gpt-3.5-turbo to extract data like Hb, Cholesterol, etc. from PDF.
+
+  ```python
+  from openai import OpenAI
+  client = OpenAI(api_key=...)
+
+  response = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[{"role": "user", "content": prompt}]
+  )
+  ```
+  
+  messages: a list of {role: ..., content: ...}
+
+  role: user (your input), assistant (AI's reply)

@@ -1,10 +1,15 @@
 from pydantic import BaseModel, Field
 from datetime import date as DateType
+from typing import Optional
 
 class ObservationIn(BaseModel):
     date: DateType
-    hb: float = Field(..., gt=0)
+    metric: str = Field(..., example="hb")
+    value: float = Field(..., gt=0)
+    file_id: Optional[str] = None  # optional field
 
 class ObservationOut(BaseModel):
     date: DateType
-    hb: float
+    metric: str
+    value: float
+    file_id: Optional[str]

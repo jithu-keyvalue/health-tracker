@@ -5,5 +5,9 @@ python-dotenv       # Reading env
 sqlalchemy          # ORM
 alembic             # DB migrations
 python-jose         # For JWT
-passlib             # For password hashing
-bcrypt              # Another option for password hashing
+passlib[bcrypt]     # For password hashing
+PyPDF2              # For reading PDF
+celery              # For background tasks
+openai              # For OpenAI API calls
+redis               # For cache
+python-multipart    # For handling file upload
