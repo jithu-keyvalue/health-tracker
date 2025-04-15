@@ -86,7 +86,7 @@
 - 🧬 Data Migration via Alembic  
   Alembic lets us migrate live data using Python code inside the migration script. This avoids data loss while changing schemas.
 
-- 🤖 OpenAI Chat Completion API
+- 🤖 OpenAI Chat Completion API  
   We use OpenAI's gpt-3.5-turbo to extract data like Hb, Cholesterol, etc. from PDF.
 
   ```python
