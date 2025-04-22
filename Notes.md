@@ -12,7 +12,19 @@
   ```
 
   📦 Benefits:
-    - Does not expose implementation details, internal error messages. (professional, safe)
-    - Clean, consistent error responses (no raw tracebacks in client)
+    - Clean, consistent error responses
     - Adds extra info to logs (request/user/url) (easy debugging)
-    - Central place for alerting/instrumentation(send alert to developer)
+    - Central place for alerting/instrumentation (send alert to developer)
+
+🧱 Service + Repository Layers  
+  - Clean separation of concerns:  
+    - services/: business logic only (no HTTP, no DB code).  
+    -  repositories/: raw DB access — only handles queries.  
+
+  - Modularity  
+    - You can change how you store data (Postgres → Mongo)
+    - or how your business logic works without touching your route handlers.
+  
+  - Testability
+    - You can test services/ with fake DB or mocks — no need to spin up FastAPI.
+    - repositories/ can be tested in isolation for query correctness.
