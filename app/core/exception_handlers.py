@@ -1,7 +1,7 @@
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_500_INTERNAL_SERVER_ERROR
-from app.logging_config import logger
+from app.core.logging_config import logger
 
 # HTTPException handler
 async def http_exception_handler(request: Request, exc: HTTPException):

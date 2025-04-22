@@ -1,8 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 from sqlalchemy.orm import Session
-from app.dependencies import get_db, get_current_user
+from app.core.dependencies import get_db, get_current_user
 from app.services import upload as upload_service
-from app.logging_config import logger
+from app.core.logging_config import logger
 
 router = APIRouter()
 

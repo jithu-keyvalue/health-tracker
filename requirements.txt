@@ -11,3 +11,4 @@ celery              # For background tasks
 openai              # For OpenAI API calls
 redis               # For cache
 python-multipart    # For handling file upload
+pydantic_settings   # For settings

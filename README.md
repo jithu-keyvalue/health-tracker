@@ -1,23 +1,26 @@
-Step 23 – Services, Repositories & Global exception handler
-===========================================================
+Step 24 – Settings, Middleware, health check, API versioning
+============================================================
 
 💭 Problem / Pain  
 -----------------
-As apps grow, mixing routing, business logic, and DB code gets messy.
-We also need better error handling.
+Project structure is getting more complex. We need:
+- Centralized config handling
+- Basic health monitoring
+- Middleware for useful request logging
+- Versioned API setup for future upgrades
 
 🛠️ Tasks 
 --------
-- Now we have split code into services, repositories, etc. 
-- But while doing that, an error has crept in - observations list is empty. Debug and fix!
+- Check the logs, the time taken by each request as per logs is too much?
 
 ✅ Check  
 --------
 
  - Add Open AI Apikey in .env and docker.env
+ - Install new dependency: `pip install -r requirements.txt`
  - Start DB, Redis, Celery: `sudo docker compose up`
  - Run backend: `uvicorn app.main:app --reload`
  - Run frontend: `python -m http.server 8001`
  - Open frontend: http://localhost:8001
- - Test the UI
+ - Test app
  

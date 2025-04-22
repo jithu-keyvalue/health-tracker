@@ -6,13 +6,14 @@ from celery import Celery
 from app.db.session import SessionLocal
 from app.db.models import UploadedFile
 from app.db.models import Observation
-from datetime import datetime, timezone
+from datetime import datetime
+from app.core.settings import settings
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 celery_app = Celery(
     "worker",
-    broker=os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    broker=settings.REDIS_URL
 )
 
 logger = logging.getLogger(__name__)

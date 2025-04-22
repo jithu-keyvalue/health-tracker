@@ -19,7 +19,7 @@ def create_observation(db: Session, user_id: str, obs_data: ObservationIn) -> Ob
 def get_observations_for_user(db: Session, user_id: str) -> List[Observation]:
     return (
         db.query(Observation)
-        .filter(Observation.user_id == "user_id")
+        .filter(Observation.user_id == user_id)
         .order_by(Observation.date)
         .all()
     )

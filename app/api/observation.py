@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from app.dependencies import get_db, get_current_user
+from app.core.dependencies import get_db, get_current_user
 from app.schemas.observation import ObservationIn, ObservationOut
 from app.db.models import User
 from app.services import observation as observation_service
-from app.logging_config import logger
+from app.core.logging_config import logger
 
 router = APIRouter()
 
