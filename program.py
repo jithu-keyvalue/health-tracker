@@ -61,6 +61,6 @@ def main():
     print_hb_chart(hb_history)
 
     save_hb_to_csv(hb_history)
-    
 
-main()
+
+main() 
