@@ -1,0 +1,87 @@
+---
+description: Guidelines on how to craft Readme.md, notes.md and overall code
+globs: 
+alwaysApply: false
+---
+General
+-------
+- Keep everything minimal but sufficient
+- Focus on one concept at a time
+- Each branch builds on previous concepts
+- Provide boilerplate, leave learning gaps
+- Make them create files only for core learning (e.g., first .py)
+- Use modern Python practices:
+  - Type hints
+  - f-strings
+  - Async where appropriate
+  - Context managers
+- Follow PEP 8 and clean code practices
+- Problem-based learning approach
+
+README.md
+---------
+- Fresh content each branch
+- Only 3 sections: Problem, Tasks, Check
+- Real-world context in problem
+- Clear, specific tasks
+- Verifiable check steps
+- No teaching material
+
+Sample:
+```
+Step 01 – Hello, Health Tracker
+===========================
+
+💭 Problem / Pain
+-----------------
+Real-world context for the task
+
+🛠️ Tasks
+--------
+- [ ] Create/modify specific files
+- [ ] Implement specific features
+
+✅ Check
+--------
+Clear verification steps
+```
+
+Notes.md
+--------
+- Prepend new sections, never modify previous
+- 5-10 focused bullets per section
+- Max 50 chars per line
+- Active voice, present tense
+- No solutions, only guidance
+- Visual formatting:
+  - Consistent emoji usage
+  - Align similar elements
+  - Group related points
+- Code examples:
+  - Show good vs bad practices
+  - Use ✅/❌ markers
+  - Keep aligned and readable
+  - Include brief comments
+- Links and references:
+  - Group at section end
+  - Use short names [Docs]
+  - Link to specific sections
+
+Sample:
+```
+📝 Notes
+--------
+- 🔑 Key Concept  
+    Brief, clear explanation.
+    [Docs](mdc:https:/specific-section-link)
+
+- ▶️ Usage  
+    ```python
+    good_code()      # ✅ Clear, simple
+    bad_code();      # ❌ Poor style
+    ```
+
+- 💡 Tips  
+    Key points to remember.
+    [Guide](mdc:https:/specific-guide-section)
+```

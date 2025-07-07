@@ -1,19 +1,22 @@
-Step 03 – Basic Health Check
-============================
+Step 03 – Hemoglobin Check
+========================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-You want to check if your hemoglobin level is okay — but right now, the program doesn’t know how to evaluate anything.
+Your health tracker needs to interpret hemoglobin levels, which are different for males and females.
 
-🛠️ Tasks  
----------
-- Fix the issue while printing the Hb status
+🛠️ Tasks
+--------
+- Fix the print statement to show status instead of gender
+- Use if-elif-else to check hemoglobin levels:
+  - Male: < 13 is Low
+  - Female: < 12 is Low
 
-✅ Check  
+✅ Check
 --------
 - Run `python program.py`
-- It asks for gender and Hb
-- It prints if the value is normal or low (based on basic rules)
+- Enter: male, 11.5 → should show "Low"
+- Enter: female, 13.0 → should show "Normal"
 
 🧠 What You Learnt  
 ------------------
