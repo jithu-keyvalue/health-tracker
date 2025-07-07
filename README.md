@@ -1,17 +1,19 @@
-Step 06 – Functions Basics
-==========================
+Step 06 – Organize with Functions
+============================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-Your code is getting longer and harder to follow.  
-You want to cleanly group related logic and avoid repetition.
+Your code is getting complex - collecting data, showing charts.
+Time to organize it into reusable pieces.
 
-🛠️ Tasks  
----------
-- Figure out how to run/use the code defined in program.py
+🛠️ Tasks
+--------
+- Run the program and see what's missing
+- The chart function isn't being called
+- Make the program show both data and chart
 
-✅ Check  
+✅ Check
 --------
 - Run `python program.py`
-- The output stays the same
-- Code is now broken into 2–3 clean, reusable functions
+- Enter some values
+- See both raw data and bar chart

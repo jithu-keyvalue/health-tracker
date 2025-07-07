@@ -25,5 +25,5 @@ def main():
     print(f"\nHi {name}, here is your Hb history:")
     print(hb_history)
 
-    print_hb_chart(hb_history)
+    # TODO: Show the bar chart
 

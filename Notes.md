@@ -1,26 +1,18 @@
-📝 Notes  
+📝 Notes
 --------
-- 🧩 Functions  
-  Use `def` to define reusable blocks of logic.
-  ```python
-  def greet(name):
-      print(f"Hello, {name}!")
-  ```
+- 📦 Functions
+    Group code into reusable blocks.
+    ```python
+    def to_celsius(fahrenheit):    # lowercase_with_underscores
+        return (fahrenheit - 32) * 5/9
 
-- 🔁 return values  
-    Functions can return results using return.
-  ```python
-  def add(a, b):
-      return a + b
-  ```
+    temp = to_celsius(98.6)    # Call function
+    print(temp)                # 37.0
+    ```
+    [Guide](https://docs.python.org/3/tutorial/controlflow.html#defining-functions)
 
-- 🧪 Why use functions?
-  - To organize your code
-  - To avoid repetition
-  - To make each part easier to understand and test
-
-- ⚙️ **Functions** naming convention    
-  Use **lowercase_with_underscores** (a.k.a. snake_case).
-
-  ✅ `print_hb_chart()`, `load_from_csv()`  
-  ❌ `PrintHbChart()`, `loadFromCSV()`
+- 📝 Naming
+    ```python
+    def calculate_bmi():     # ✅ clear, lowercase
+    def calculateBMI():      # ❌ not Python style
+    ``` 
