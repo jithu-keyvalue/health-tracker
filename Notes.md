@@ -1,27 +1,30 @@
 📝 Notes
 --------
 - 🐍 What is Python?  
-    A general-purpose, high-level language. Commonly used for backend, scripting, automation, data, and AI. Clean syntax, easy to pick up, extremely powerful.
+    High-level language for backend, scripting, data & AI.
+    [Docs](https://www.python.org)
 
 - Python files must end in .py
 
-- ▶️ How to run a Python file  
-    `python program.py`
-    python is the command to run the Python interpreter. It executes the code inside program.py line by line.
+- ▶️ Running Python  
+    `python program.py` runs your code line by line.
+    [Tutorial](https://docs.python.org/3/tutorial/interpreter.html)
 
-- 🖨️ What does print() do?  
-    It writes text to the terminal.
+- 🖨️ print()  
+    Writes text to terminal.
+    [Docs](https://docs.python.org/3/library/functions.html#print)
 
-- 🚫 No semicolons or parentheses required (usually)  
-  Clean, minimal syntax:
+- 🚫 Statements  
     ```python
-    print("hello")  # ✅
-    print("hello"); # ❌ (works, but not Pythonic)
+    print("hello")                     # ✅ One per line
+    print("hi"); print("there")        # ❌ Multiple per line
     ```
+    [Style Guide](https://peps.python.org/pep-0008/#other-recommendations)
     
-- 🧵 Strings in Python  
-    Text inside 'single' or "double" quotes:
+- 🧵 Strings  
     ```python
-    print("hello")
-    print('world')
+    print("Use double quotes")         # ✅ Default choice
+    print('Has "quotes" inside')       # ✅ Avoid escaping
+    print("Don't use: \"quotes\"")     # ❌ Hard to read
     ```
+    [Style Guide](https://peps.python.org/pep-0008/#string-quotes)
