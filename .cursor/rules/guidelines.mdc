@@ -8,8 +8,15 @@ General
 - Keep everything minimal but sufficient
 - Focus on one concept at a time
 - Each branch builds on previous concepts
-- Provide boilerplate, leave learning gaps
-- Make them create files only for core learning (e.g., first .py)
+- Minimize typing, maximize learning:
+  - Provide most of the code setup
+  - Leave gaps only for new concepts
+  - Give partial solutions when helpful
+  - Make them type only what teaches
+- Guide discovery, don't spoil:
+  - Present problems, not solutions
+  - Make them observe and think
+  - Point what's wrong, not how to fix
 - Use modern Python practices:
   - Type hints
   - f-strings
@@ -48,40 +55,34 @@ Clear verification steps
 
 Notes.md
 --------
-- Prepend new sections, never modify previous
-- 5-10 focused bullets per section
+- Focus only on new concepts for this branch
+- Each concept gets:
+  - Brief explanation (what it is)
+  - Minimal example (how to use it)
+  - Links to docs
+- Use ✅/❌ style only for:
+  - Common pitfalls
+  - Style choices
+  - Best practices
+- Keep examples generic (not project-specific)
 - Max 50 chars per line
 - Active voice, present tense
-- No solutions, only guidance
-- Visual formatting:
-  - Consistent emoji usage
-  - Align similar elements
-  - Group related points
-- Code examples:
-  - Show good vs bad practices
-  - Use ✅/❌ markers
-  - Keep aligned and readable
-  - Include brief comments
-- Links and references:
-  - Group at section end
-  - Use short names [Docs]
-  - Link to specific sections
 
 Sample:
 ```
 📝 Notes
 --------
-- 🔑 Key Concept  
-    Brief, clear explanation.
-    [Docs](mdc:https:/specific-section-link)
-
-- ▶️ Usage  
+- 🔑 Basic Concept  
+    Brief explanation.
     ```python
-    good_code()      # ✅ Clear, simple
-    bad_code();      # ❌ Poor style
+    # Simple example
+    value = do_something()
     ```
+    [Docs](https://link)
 
-- 💡 Tips  
-    Key points to remember.
-    [Guide](mdc:https:/specific-guide-section)
+- 🚫 Common Pitfalls  
+    ```python
+    x = 1        # ✅ Clear name
+    val = 1      # ❌ Vague name
+    ```
 ```

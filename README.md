@@ -7,7 +7,7 @@ Your health tracker needs to interpret hemoglobin levels, which are different fo
 
 🛠️ Tasks
 --------
-- Fix the print statement to show status instead of gender
+- The program shows wrong information - fix the final message
 - Use if-elif-else to check hemoglobin levels:
   - Male: < 13 is Low
   - Female: < 12 is Low
@@ -17,10 +17,4 @@ Your health tracker needs to interpret hemoglobin levels, which are different fo
 - Run `python program.py`
 - Enter: male, 11.5 → should show "Low"
 - Enter: female, 13.0 → should show "Normal"
-
-🧠 What You Learnt  
-------------------
-- How to read numeric input from the user  
-- How to use `if-else` for conditional logic  
-- How to combine multiple inputs and print dynamic results  
 

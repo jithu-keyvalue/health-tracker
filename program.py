@@ -12,9 +12,6 @@ hb = float(input("Enter your haemoglobin (Hb) value: "))
 
 if gender == "male" and hb < 13:
     status = "Low"
-elif gender == "female" and hb < 12:
-    status = "Low"
-else:
-    status = "Normal"
+# TODO: Add the female check and else part
 
-print(f"Hello, {name}! Your haemoglobin level is {status}.")
+print(f"Hello, {name}! Your haemoglobin level is {gender}.")
