@@ -16,13 +16,14 @@ def print_hb_chart(hb_history):
         bars = "▓" * int(hb * 2)
         print(f"{date} | {bars:<20} {hb}")
 
+
 def save_hb_to_csv(hb_history):
-    file = open("hb_data.csv", "w")
-    file.write("date,hb\n")
-    for date, hb in hb_history.items():
-        file.write(f"{date},{hb}\n")
-    file.close()
+    with open("hb_data.csv") as file:
+        file.write("date,hb\n")
+        for date, hb in hb_history.items():
+            file.write(f"{date},{hb}\n")
     print('\nSaved data.')
+
 
 def main():
     print("Welcome to Health Tracker!")
@@ -33,6 +34,6 @@ def main():
     print(hb_history)
 
     print_hb_chart(hb_history)
-    
 
-main()
+
+main() 
