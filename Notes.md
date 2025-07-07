@@ -1,14 +1,25 @@
 📝 Notes  
 --------
 
-- 📦 Python modules:  
-  Any `.py` file is a module. You can import functions from it:
+- 📦 Modules
+    Split code into .py files.
+    ```python
+    # chart.py
+    def print_chart(): ...
 
-  ```python
-  from validation import get_date
-  ```
+    # main.py
+    from chart import print_chart
+    ```
+    [Guide](https://docs.python.org/3/tutorial/modules.html)
 
--  🧱 Why split code?  
+- 🔍 Import Styles
+    ```python
+    from mod import func    # ✅ Clear, direct
+    import mod              # ❌ Verbose: mod.func()
+    from mod import *       # ❌ Confusing source
+    ```
+
+- 🧱 Why split code?  
     - Easier to test
     - Easier to read
     - Easier to extend (add weight later, for example)

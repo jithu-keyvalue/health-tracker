@@ -1,18 +1,20 @@
 Step 09 – Input Validation & Modules
 ====================================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-The program is growing — it's hard to read, test, or extend when everything is in one file.  
+The program is growing — it's hard to read, test, or extend when everything is in one file.
 Also, inputs can be invalid or messy, leading to crashes or bad data.
 
-🛠️ Tasks  
----------
-- There is something wrong in `main.py` around how we use `print_chart`. Fix it.
+🛠️ Tasks
+--------
+- Run the program and enter some values
+- The chart doesn't show up
+- Look at the imports and function calls
 
-✅ Check  
+✅ Check
 --------
 - Run `python main.py`
-- Try invalid name/date/Hb — it should handle and re-prompt
-- Check the file: `<name>.csv` gets created with valid data
-- Code is organized across smaller, focused files
+- Chart should appear after entering values
+- Invalid inputs should be caught
+- Data saved to name-based file
