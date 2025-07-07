@@ -11,15 +11,15 @@
   This will print "Hello!" three times.
 
 - 🗂️ Dictionary  
-  A way to store key → value pairs. You can look up values using keys.
+  Store and look up values by key.
+
   Example:
   ```python
-    scores = {}
-    scores["Alice"] = 90
-    scores["Bob"] = 85
-
-    print(scores["Alice"])  # prints 90
+    scores = {}              # Empty dictionary
+    scores["day1"] = 90     # Add key-value pair
+    print(scores["day1"])   # Get value: 90
   ```
+  [Guide](https://docs.python.org/3/tutorial/datastructures.html#dictionaries)
 
 - 📦 **Variables**  
   Naming convention: **lowercase_with_underscores**

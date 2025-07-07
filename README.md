@@ -1,15 +1,17 @@
 Step 04 – Track Hb by Date
 ===========================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
 You're only checking hemoglobin once — but you want to track it over time to see how it's changing.
 
-🛠️ Tasks  
----------
-- Fix the issue in saving Hb value in dictionary
+🛠️ Tasks
+--------
+- Run the program and enter multiple dates
+- Something's wrong with how values are stored
+- Make it save each date's value correctly
 
-✅ Check  
+✅ Check
 --------
 - Run `python program.py`
 - Enter multiple dates + Hb values
