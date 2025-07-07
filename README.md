@@ -1,22 +1,17 @@
-Step 02 – User Input
-====================
+Step 02 – Personal Health Tracker
+==============================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-You want your program to do more than just printing hardcoded text.
+Your health tracker needs to be personal - it should know who's using it.
 
-🛠️ Tasks  
----------
-- Update the script to greet using the name given by user
+🛠️ Tasks
+--------
+- Use input() to ask for the user's name
+- Use f-string to print a personalized welcome message
 
-✅ Check  
+✅ Check
 --------
 - Run `python program.py`
-- It asks for your name
-- It should prints: `Hello, <your name>!`
-
-🧠 What You Learnt  
-------------------
-- How to accept user input during runtime  
-- How to store input in a variable  
-- How to use that variable in a `print()` statement  
+- Enter your name when asked
+- See a personalized health tracker welcome

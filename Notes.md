@@ -1,27 +1,23 @@
-📝 Notes  
+📝 Notes
 --------
-- 🧍‍♂️ input()  
-  Pauses the program and waits for the user to type something.
+- 🔤 User Input
+    ```python
+    name = input("Name: ")    # ✅ Clear prompt
+    name = input()            # ❌ No prompt
+    ```
+    [Docs](https://docs.python.org/3/library/functions.html#input)
 
-  ```python
-  name = input("Enter your age: ")
-  ```  
-  The message inside input() is shown as a prompt.
+- 📦 Variables
+    ```python
+    name = "Alice"           # ✅ Clear name
+    x = "Bob"               # ❌ Unclear name
+    ```
+    [Guide](https://peps.python.org/pep-0008/#naming-conventions)
 
-- 📦 Variables  
-  You can store the result of input() in a variable to reuse it.
-
-- ✅ Variables don’t need types declared  
-  Python is dynamically typed:
-
-  ```python
-  x = 10
-  name = "Jithu"
-  ```
-
-- 🔤 f-strings  
-  Use f"..." to insert variables directly into strings.
-  ```python
-  print(f"You are {age} years old!")
-  ```
+- 🎯 f-strings
+    ```python
+    print(f"Hi {name}")     # ✅ Modern Python
+    print("Hi " + name)     # ❌ Old style
+    ```
+    [Guide](https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals)
 

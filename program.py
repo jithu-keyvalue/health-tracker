@@ -1,4 +1,3 @@
 print("Welcome to Health Tracker!")
 
-name = input("What is your name? ")
-print("Hello!")
+# TODO: Ask for the user's name and print a welcome using f-string
