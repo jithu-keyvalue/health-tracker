@@ -1,12 +1,13 @@
-📝 Notes  
+📝 Notes
 --------
-- ➰ Looping through a dictionary  
-  Use `.items()` to get both key and value in a loop:
-
-  ```python
-  for key, value in some_dict.items():
-      print(key, value)
-  ```
+- 🔄 Dictionary Loop
+    Get both key and value in each iteration.
+    ```python
+    data = {"a": 1, "b": 2}
+    for key, val in data.items():
+        print(key, val)    # a 1, then b 2
+    ```
+    [Guide](https://docs.python.org/3/tutorial/datastructures.html#looping-techniques)
 
 - 🔁 String multiplication  
 Repeat a character using *:
