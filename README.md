@@ -1,17 +1,19 @@
-Step 11 – Query Param + Swagger
-===============================
+Step 11 – Query Parameters
+=======================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-You want to say hello to users dynamically, without hardcoding a name in the backend.  
-Also, is there a more convenient way to test APIs?
+API greets with hardcoded text. No way to test endpoints easily.
 
-🛠️ Tasks  
----------
-- Currently we don't get the name from query parameter in response. Fix this.
+🛠️ Tasks
+--------
+- Use name from URL query
+- Return JSON response
+- Try Swagger UI
 
-✅ Check  
+✅ Check
 --------
 - Run: `uvicorn main:app --reload`
-- Test in browser: `http://localhost:8000/hello?name=javed`
-- Test in Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
+- Test: http://localhost:8000/hello?name=Alice
+- See: {"message": "Hello, Alice!"}
+- Open: http://localhost:8000/docs

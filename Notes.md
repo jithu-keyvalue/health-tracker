@@ -1,12 +1,29 @@
-📝 Notes  
+📝 Notes
 --------
 
-- ❓ Query Parameters:  
-  Extra values passed in the URL after `?`. Common for filters, inputs, etc.
+- 🔍 Query Parameters
+    URL data after ? mark
+    ```python
+    @app.get("/items")
+    def get_item(color: str):  # ?color=blue
+        return {"color": color}
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/query-params/)
 
-  ```url
-  /greet?name=Alice
-  ```
+- 📊 JSON Response
+    Always return JSON objects
+    ```python
+    return {"id": 1, "name": "item"}
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/response-model/)
+
+- 📘 Swagger UI
+    Auto-generated API testing
+    ```
+    /docs    - Try endpoints
+    /redoc   - Read API docs
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/metadata/)
 
 - 🧾 OpenAPI:  
   An industry standard that defines what your API can do (routes, inputs, outputs).  
