@@ -1,18 +1,28 @@
-📝 Notes  
+📝 Notes
 --------
-- 📮 POST request:  
-  Used to send data in the request **body** — good for larger or private data (not visible in URL or logs).
 
-- 📥 Request body as dict:  
-  FastAPI can auto-parse JSON into a Python `dict`.  
-  Then you can use `.get()` to access values.
+- 📮 POST Request
+    Send data in request body
+    ```python
+    @app.post("/items")
+    def add_item(data: dict):
+        return {"id": 1}
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/body/)
 
-- 📄 `csv.writer`:  
-  Used to write rows into a CSV file.  
-  Open the file in append mode (`"a"`) and use `writer.writerow(...)`.
+- 📄 CSV Writer
+    Write rows to CSV file
+    ```python
+    with open("data.csv", "a") as f:
+        writer = csv.writer(f)
+        writer.writerow(["id", "name"])
+    ```
+    [Docs](https://docs.python.org/3/library/csv.html)
 
-- 📁 `os.path.exists()`:  
-  Checks if a file already exists.
-
-- 📑 Constant naming:  
-  File-level constants like `CSV_FILE` are written in **ALL_CAPS**.
+- 📁 File Operations
+    Check and create files
+    ```python
+    if not os.path.exists("data.csv"):
+        open("data.csv", "a").close()
+    ```
+    [Docs](https://docs.python.org/3/library/os.path.html)

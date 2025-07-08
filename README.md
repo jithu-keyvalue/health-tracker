@@ -1,24 +1,25 @@
-Step 12 – POST Observation (Save to CSV)
-========================================
+Step 12 – Save Observations
+========================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-You can’t track health data unless it's stored somewhere.  
-Let's enter data in frontend and save it in backend.
+Health data needs to be stored for tracking.
+CSV file shows wrong data order.
 
-🛠️ Tasks  
----------
-- Somehow the data is not getting saved in the csv in the proper way. Fix this.
-
-✅ Check  
+🛠️ Tasks
 --------
-- Run the app: `uvicorn main:app --reload`
-- Open `/docs`, post this:
+- Post new observation via /docs
+- Check CSV content
+- Fix data saving order
 
+✅ Check
+--------
+- Run: `uvicorn main:app --reload`
+- Post: /observations
   ```json
   {
     "date": "2024-04-10",
     "hb": 13.5
   }
   ```
-- Check that observations.csv is created and contains correct data
+- CSV: date and hb in correct columns
