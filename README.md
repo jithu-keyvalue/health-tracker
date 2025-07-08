@@ -1,20 +1,28 @@
-Step 15 – Setup Postgres with Docker Compose
-============================================
+Step 15 – Setup Postgres DB
+========================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-CSV is great for early steps, but not reliable for real apps.  
-We need a proper database to persist and query health data.
+CSV files can't handle multiple users or concurrent access.
+Database container fails to start - can't find configuration.
 
-🛠️ Tasks  
----------
-docker-compose.yml file got some error. We are not specifying the right file name for env it seems.
-
-✅ Check  
+🛠️ Tasks
 --------
-- Run the DB container using `docker compose up`
-- Connect to the DB manually using `psql` and verify it's working:
-  ```bash
-  docker exec -it health-db psql -U healthuser -d healthdb
-  ```
-- Verify DB is live. Run inside Postgres shell: `SELECT NOW();`
+- Fix database configuration issue
+- Start database container
+- Verify connection works
+
+✅ Check
+--------
+1. Start database:
+   - Use docker compose to start in background
+
+2. Verify it's running:
+   ```bash
+   docker ps
+   ```
+
+3. Test connection:
+   - Connect to postgres inside container
+   - Run a test query (check current time)
+   - Exit psql shell

@@ -1,66 +1,68 @@
-📝 Notes  
+📝 Notes
 --------
 
-- 🐳 Docker  
-  A tool to run apps in lightweight containers that bundle code + dependencies.  
-  Great for consistent environments across dev and prod.
+- 🐳 Docker
+    Run apps in isolated containers
+    ```bash
+    # Run a container
+    docker run -d --name mydb postgres:15
 
-- 🧩 Docker Compose  
-  Lets you define and run multi-container setups (like app + db) using `docker-compose.yml`.
+    # View containers
+    docker ps
 
-  ```bash
-  docker compose up
-  ```
+    # Stop container
+    docker stop mydb
+    ```
+    [Docs](https://docs.docker.com/get-started/)
 
-- 🗃️ Postgres  
-  A popular open-source SQL database used to store structured data (users, health records, etc.).
+- 🧩 Docker Compose
+    Run multiple containers together
+    ```yaml
+    services:
+      db:
+        image: postgres:15
+        env_file: .env
+    ```
 
-- 🔐 Environment Variables  
-  Keep secrets and config (like DB passwords) out of the main file.
-  Stored in a .env file (e.g. docker.env).
+    Start services:
+    ```bash
+    docker compose up -d  # Run in background
+    ```
+    [Docs](https://docs.docker.com/compose/)
 
-  ```bash
-  POSTGRES_DB=healthdb
-  POSTGRES_USER=healthuser
-  POSTGRES_PASSWORD=supersecret
-  ```
+- 🌐 Port Mapping
+    Connect host to container ports
+    ```yaml
+    ports:
+      - "8080:80"    # host:container
+      - "5432:5432"  # postgres default
+    ```
+    [Docs](https://docs.docker.com/config/containers/container-networking/)
 
-- 📦 Special Postgres vars  
-  These variable names are required by the official Postgres Docker image:
-  - POSTGRES_DB
-  - POSTGRES_USER
-  - POSTGRES_PASSWORD
+- 📦 Docker Volumes
+    Keep container data persistent
+    ```yaml
+    volumes:
+      - mydata:/var/lib/postgresql/data
+    ```
+    [Docs](https://docs.docker.com/storage/volumes/)
 
-- 🪣 Volumes  
-  Used to persist DB data even if the container stops or is removed.
+- 🗃️ Postgres Setup
+    Required environment variables
+    ```bash
+    POSTGRES_DB=mydb
+    POSTGRES_USER=admin
+    POSTGRES_PASSWORD=secret
+    ```
+    [Docs](https://hub.docker.com/_/postgres)
 
-  ```bash
-  volumes:
-    - pgdata:/var/lib/postgresql/data
-  ```
+- 🔌 Postgres Connect
+    Test database connection
+    ```bash
+    # Connect to container
+    docker exec -it db-name psql -U user -d dbname
 
-  - To delete volume & start clean:
-
-  ```bash
-  docker compose down -v
-  docker compose up
-  ```
-
-- 🏷️ Container Name  
-  Makes it easy to refer to the container by name: `container_name: health-db`
-
-- 🌐 Port Mapping  
-  Maps container's port to your machine.
-
-  ```bash
-  "5433:5432"  # access DB via localhost:5433
-  ```
-
-- 🧪 Test the DB
-  ```bash
-  docker exec -it health-db psql -U healthuser -d healthdb
-  ```
-
-  Inside Postgres shell: `SELECT NOW();`
-
-  Returns the current DB time — confirms the DB is live and responding.
+    # Test query
+    SELECT version();
+    ```
+    [Docs](https://www.postgresql.org/docs/current/app-psql.html)
