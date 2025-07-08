@@ -1,54 +1,51 @@
-📝 Notes  
+📝 Notes
 --------
 
-- 📦 Alembic  
-  A database migration tool for SQLAlchemy. Helps manage schema changes in a structured way.  
-  Creates migration scripts to keep track of DB schema changes over time.
-
-- 🛠️ Setting Up Alembic  
-
-  - Configure DB URL:  
-    In alembic.ini, set the sqlalchemy.url to point to your Postgres DB.
+- 🔄 Database Migrations
+    Track schema changes over time
     ```python
-    sqlalchemy.url = postgresql://healthuser:supersecret@localhost:5434/healthdb
+    # Instead of this
+    Base.metadata.create_all()
+
+    # Use migrations
+    alembic upgrade head
     ```
+    [Docs](https://alembic.sqlalchemy.org/en/latest/tutorial.html)
 
-  - Link Models to Alembic:  
-    In alembic/env.py, import Base from db.session and your models, then set target_metadata to Base.metadata.
+- 📝 Migration Files
+    Auto-generate from models
+    ```bash
+    # Create migration
+    alembic revision --autogenerate -m "add users"
+
+    # Apply latest
+    alembic upgrade head
+
+    # Rollback one step
+    alembic downgrade -1
+    ```
+    [Docs](https://alembic.sqlalchemy.org/en/latest/autogenerate.html)
+
+- ⚙️ Configuration
+    Set up database connection
     ```python
+    # alembic.ini
+    sqlalchemy.url = postgresql://user:pass@localhost/db
+
+    # env.py
+    from myapp.models import Base
     target_metadata = Base.metadata
     ```
+    [Docs](https://alembic.sqlalchemy.org/en/latest/tutorial.html#editing-the-ini-file)
 
-- 🔄 Autogenerate Migrations  
-  Alembic compares your models to the current DB schema and generates migration scripts.
-
-  ```bash
-  alembic revision --autogenerate -m "Create observations table"
-  ```
-
-  This will create a migration file in alembic/versions/.
-
-- ⚡ Apply Migrations  
-  Run migrations to update the DB schema.
-
-  ```bash
-  alembic upgrade head
-  ```
-
-  - head applies the most recent migration.
-
-- 🔄 Migrations vs create_all()  
-
-  - create_all(): Creates tables directly but doesn't track changes.
-  - Migrations: Track schema changes over time, allow for rollback, and are more flexible in production environments.
-
-- 🎬 Rollback Migrations (Optional)  
-  If you want to undo a migration:
-
-  ```bash
-  alembic downgrade -1 
-  ```
-
-- 🧳 Migration Scripts  
-    - Alembic auto-generates scripts for DB schema changes.
-    - You can manually edit migration scripts for complex changes (like renaming columns).
+- 🔍 Review Migrations
+    Always check generated files
+    ```python
+    # migrations/versions/abc123_add_users.py
+    def upgrade():
+        op.create_table(
+            'users',
+            sa.Column('id', sa.Integer())
+        )
+    ```
+    [Docs](https://alembic.sqlalchemy.org/en/latest/ops.html)
