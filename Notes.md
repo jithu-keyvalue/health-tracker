@@ -1,42 +1,62 @@
 📝 Notes  
 --------
 
-- 📄 CREATE TABLE  
-  SQL command to define your table structure.
+- 📄 Create Table
+    Define table structure
+    ```sql
+    CREATE TABLE items (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        price REAL CHECK (price > 0)
+    );
+    ```
+    [Docs](https://www.postgresql.org/docs/current/sql-createtable.html)
 
-- 🔁 CREATE TABLE IF NOT EXISTS  
-  Only creates the table if it doesn’t already exist — avoids errors on rerun.
+    Key concepts:
+    - SERIAL: Auto-incrementing ID
+    - PRIMARY KEY: Unique identifier
+    - CHECK: Validate values
+    - IF NOT EXISTS: Skip if table exists
 
-- 🔢 SERIAL  
-  Auto-incrementing integer — useful for IDs (id SERIAL PRIMARY KEY).
+- 📝 Insert Data
+    Add new rows
+    ```sql
+    INSERT INTO items (name, price)
+    VALUES ('item1', 10.5);
+    ```
+    [Docs](https://www.postgresql.org/docs/current/sql-insert.html)
 
-- 📝 INSERT INTO (...) VALUES (...)  
-  Used to add new rows to the table.
+- 📥 Query Data
+    Fetch and sort rows
+    ```sql
+    -- Basic select
+    SELECT * FROM items;
 
-  ```sql
-  INSERT INTO observations (date, hb) VALUES ('2024-04-10', 13.5);
-  ```
+    -- With pagination
+    SELECT * FROM items
+    ORDER BY name
+    OFFSET 0 LIMIT 10;
+    ```
+    [Docs](https://www.postgresql.org/docs/current/sql-select.html)
 
-- 📥 SELECT ... ORDER BY  
-  Used to fetch rows, sorted by a column.
+- 📦 Result Fetching
+    Get query results
+    ```python
+    row = cur.fetchone()     # Get one row
+    rows = cur.fetchall()    # Get all rows
+    ```
+    [Docs](https://www.psycopg.org/docs/cursor.html)
 
-  ```sql
-  SELECT date, hb FROM observations ORDER BY date;
-  ```
-
-- 📑 OFFSET + LIMIT  
-  Used for pagination — skips and limits results.
-
-  ```sql
-  SELECT ... ORDER BY date OFFSET 0 LIMIT 10;
-  ```
-
-- 📦 cur.fetchone()  
-  Fetches a single row from the SELECT result. Use when expecting just one row.
-
-- 📦 cur.fetchall()  
-  Fetches all rows as a list of tuples.
-
-- 🧾 conn.commit()  
-  Saves any changes made (e.g. inserts).  
-  Without this, the changes are discarded when the connection closes.
+- 🔄 Transaction
+    Save or discard changes
+    ```python
+    try:
+        cur.execute("INSERT ...")
+        conn.commit()      # Save changes
+    except:
+        conn.rollback()    # Discard on error
+    finally:
+        cur.close()       # Clean up
+        conn.close()
+    ```
+    [Docs](https://www.postgresql.org/docs/current/tutorial-transactions.html)
