@@ -1,22 +1,33 @@
-Step 21 – Link User and Observations, Home Page
-===============================================
+Step 21 – Link Users and Observations
+================================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-We need to link the **`User`** and **`Observation`** tables and display observations tied to the currently logged-in user.  
+Observations page shows no data after saving.
+App structure has changed too.
 
-🛠️ Tasks 
+🛠️ Tasks
 --------
-- Run the new migration script to add foreign key in Observation table: `alembic upgrade head`
-- When you run the app, there is an issue with listing entries. The API to get observations isn't working properly. Please fix this.
+- Fix the startup error
+- Debug the data query
+- Fix the issue
 
-
-✅ Check  
+✅ Check
 --------
+1. Setup database:
+   - Start: `docker compose up -d`
+   - Apply migrations: `alembic upgrade head`  # Uses provided migration scripts
 
-Test app:
- - Run backend: `uvicorn app.main:app --reload`
- - Run frontend: `python -m http.server 8001`
- - Open frontend: http://localhost:8001
- - Test the UI
+2. Start services:
+   - Try starting backend: `uvicorn main:app --reload`
+   - Find why it fails
+   - Start with correct path
+   - Frontend: `cd ui && python -m http.server 8001`
+
+3. Test the flow:
+   - Login to your account
+   - Add new observation
+   - Data saves but doesn't show up
+   - Check database content
+   - Review the query logic
  
