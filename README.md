@@ -1,25 +1,32 @@
 Step 14 – Frontend UI + CORS
 ============================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-Your API works — but users can’t interact with it visually.  
-Also, browsers block frontend → backend calls unless CORS is allowed.
+Frontend can't save new observations - the API endpoint doesn't match.
+Backend logs show errors for normal operations, causing false alarms.
 
-🛠️ Tasks  
----------
-- Unable to add new observations from frontend. Is everything alright with the POST API call?
-- Logging is fine, but why are we using "error" log level for a simple info?
-
-✅ Check  
+🛠️ Tasks
 --------
+- Fix frontend API endpoint for saving
+- Use correct log level for normal events
 
-- In one terminal (FastAPI backend): `uvicorn main:app --reload`
-- In another terminal (Frontend):
-    ```bash
-    cd ui
-    python3 -m http.server 8001
-    ```
-- Open: http://localhost:8001
-- Should see existing entries
-- Submit a new entry → it should appear in the list
+✅ Check
+--------
+1. Start servers:
+   ```bash
+   # Terminal 1 - Backend
+   uvicorn main:app --reload
+
+   # Terminal 2 - Frontend
+   cd ui && python3 -m http.server 8001
+   ```
+
+2. Open frontend:
+   - Visit: http://localhost:8001
+   - Enter new observation
+   - Should save successfully
+
+3. Check logs:
+   - Backend shows normal events as INFO
+   - No false error messages
