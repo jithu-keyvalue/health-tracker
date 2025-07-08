@@ -43,6 +43,18 @@
     ```
     [Docs](https://docs.sqlalchemy.org/en/20/orm/session_basics.html#when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it)
 
+- 🏗️ Create Tables
+    Auto-create from models
+    ```python
+    # Create all tables on startup
+    Base.metadata.create_all(bind=engine)
+    ```
+    Limitations:
+    - Can't track schema changes
+    - No way to rollback changes
+    - Not suitable for production
+    [Docs](https://docs.sqlalchemy.org/en/20/core/metadata.html#creating-and-dropping-database-tables)
+
 - 🛡️ SQL Injection Protection
     Raw SQL vs ORM approach
     ```python
