@@ -13,7 +13,7 @@ CSV_FILE = "observations.csv"
 
 class Observation(BaseModel):
     date: date
-    hb: float = Field(..., example=13.5, gt=30)
+    hb: float = Field(..., gt=30)
 
 # --- Routes ---
 
@@ -27,7 +27,7 @@ def add_observation(obs: Observation):
             writer.writerow(["date", "hb"])
         writer.writerow([obs.date, obs.hb])
 
-    return {"message": "Saved", "date": obs.date, "hb": obs.hb}
+    return {"message": "Saved"}
 
 @app.get("/observations", response_model=List[Observation])
 def get_observations(skip: int = 0, limit: int = 10):
@@ -44,12 +44,8 @@ def get_observations(skip: int = 0, limit: int = 10):
     # Slice to get the required page
     paged = data[skip : skip + limit]
 
-    observations = []
-    for row in paged:
-        obs = Observation(
-            date=row["date"],
-            hb=float(row["hb"])  # CSV reads everything as strings
-        )
-        observations.append(obs)
 
-    return observations
+    return [
+        Observation(date=row["date"], hb=float(row["hb"]))
+        for row in paged
+    ]
