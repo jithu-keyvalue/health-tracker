@@ -1,22 +1,25 @@
-Step 18 – Use SQLAlchemy ORM
-============================
+Step 18 – SQLAlchemy ORM
+===================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-Raw SQL works but it’s low-level, repetitive, and hard to scale.  
+Data isn't being saved to database.
+POST endpoint returns message instead of data.
 
-We need a cleaner, model-driven way to interact with the DB.
-
-🛠️ Tasks  
----------
-- Install the dependency and run the app, things look fine. But ...
-- Are observations actually getting saved? check the POST endpoint once again - the db calls are fine?
-
-✅ Check  
+🛠️ Tasks
 --------
-- Install new dependency(sqlalchemy): `pip install -r requirements.txt`
-- Run backend: `uvicorn main:app --reload`
-- Run frontend: `python -m http.server 8001`
-- Open frontend: http://localhost:8001
-- Test getting observations → under the hood using ORM
-- Test adding an observation → it should be saved in DB via ORM
+- Fix data persistence issue
+- Define and use proper response schema
+
+✅ Check
+--------
+1. Start services:
+   - Start FastAPI: `uvicorn main:app --reload`
+   - Start frontend: `cd ui && python3 -m http.server 8001`
+
+2. Test saving:
+   - List current observations
+   - Add new observation
+   - List again - new data not there
+   - Fix the issue
+   - Try again - new data should appear

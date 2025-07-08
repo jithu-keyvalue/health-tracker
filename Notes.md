@@ -1,110 +1,62 @@
-📝 Notes  
+📝 Notes
 --------
 
-- 🧱 SQLAlchemy ORM  
-  Lets you define tables as Python classes, and rows as Python objects.  
-  No raw SQL needed.
+- 🧱 SQLAlchemy Model
+    Define tables as classes
+    ```python
+    class Item(Base):
+        __tablename__ = "items"
+        id = Column(Integer, primary_key=True)
+        name = Column(String, nullable=False)
+    ```
+    [Docs](https://docs.sqlalchemy.org/en/20/orm/mapping_styles.html)
 
-- 🤝 Why ORM?
-  - Cleaner code (no manual SQL)
-  -  Reusable models
-  - Safer queries (built-in escaping)
-  - Easier to test, extend, and refactor
+- 📝 Database Operations
+    Work with data as objects
+    ```python
+    # Create
+    item = Item(name="test")
+    db.add(item)
+    db.commit()  # Save to database
 
-- 🏗️ ORM Model Definition
-  ```python
-  class Observation(Base):
-      __tablename__ = "observations"
-      id = Column(Integer, primary_key=True)
-      date = Column(Date, nullable=False)
-      hb = Column(Float, nullable=False)
-  ```
-  - Column(...): defines a DB column
+    # Query
+    items = db.query(Item).all()
+    ```
+    [Docs](https://docs.sqlalchemy.org/en/20/orm/session_basics.html)
 
-  - Integer, Date, Float: column types
+- 🔄 Session Management
+    Handle database connections
+    ```python
+    # Dependency Injection
+    def get_db():
+        db = SessionLocal()
+        try:
+            yield db  # Provides session to endpoint
+        finally:
+            db.close()  # Auto-cleanup
 
-  - nullable=False: column is required (NOT NULL)
+    # Use in endpoint
+    def create_item(item: ItemIn, db: Session = Depends(get_db)):
+        db_item = Item(**item.dict())
+        db.add(db_item)
+        db.commit()
+    ```
+    [Docs](https://docs.sqlalchemy.org/en/20/orm/session_basics.html#when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it)
 
-- 🛡️ CheckConstraint
-  Used to enforce rules in DB (e.g., hb must be > 0)
+- 🛡️ SQL Injection Protection
+    Raw SQL vs ORM approach
+    ```python
+    # Raw SQL (vulnerable)
+    name = "Robert'); DROP TABLE items; --"
+    cur.execute(f"INSERT INTO items (name) VALUES ('{name}')")
 
-- 🧰 Session & DB Setup
-
-  ```python
-  engine = create_engine(DB_URL)
-  SessionLocal = sessionmaker(bind=engine)
-  Base = declarative_base()
-  ```
-
-  - create_engine(...): connects to Postgres
-  - SessionLocal(): creates a session for DB operations
-  - Base: parent for all ORM models
-
-- 🧪 Session Usage
-  ```python
-  db = SessionLocal()
-  db.add(obj)
-  db.commit()
-  db.query(Model).filter(...).all()
-  ```
-
-  -  add(...): stage a new row
-  - commit(): write it to DB
-  - query(...): fetch rows using ORM
-  - Always close session after use
-
-- 🚦 Base.metadata.create_all(engine)  
-  Creates all tables defined by models.
-  - ⚠️ Dev only — we'll replace this with migrations.
-
-- 🧬 Dependency Injection (DI) 
-  Dependency Injection is a way to automatically provide objects (like DB sessions, config, current user, etc.) to your functions without you manually creating or wiring them each time.
-
-  ```python
-  def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-  ```
-  - Used with `Depends(get_db)` in FastAPI
-  - The yield gives you a DB session for the request
-  - After response is sent, finally closes the session
-  - This pattern avoids leaks and ensures clean resource use
-  - Easier testing (swap out dependencies)
-
-
-🔐 How ORM Protects Against SQL Injection  
------------------------------------------
-
-SQL injection happens when user input is directly added to SQL strings:
-
-- ❌ Raw SQL (vulnerable):
-  ```python
-  user_input = "2024-04-10'); DROP TABLE observations; --"
-  query = f"INSERT INTO observations (date, hb) VALUES ('{user_input}', 13.5);"
-  cursor.execute(query)
-  ```
-
-  💥 This becomes:
-
-  ```sql
-  INSERT INTO observations (date, hb) VALUES ('2024-04-10');   
-  DROP TABLE observations; -- 
-  ```
-
-- ✅ ORM (safe):
-
-
-  ```python
-  obs = Observation(date="2024-04-10'); DROP TABLE observations; --", hb=13.5)
-  db.add(obs)
-  db.commit()
-  ```
-
-  Under the hood, SQLAlchemy sends: `INSERT INTO observations (date, hb) VALUES (%s, %s)`  
-  With values passed separately: `["2024-04-10'); DROP TABLE observations; --", 13.5]`
-
-  - ✅ Input is treated as data, not SQL
-  - ✅ Injection is blocked by design
+    # ORM (safe)
+    db.add(Item(name="Robert'); DROP TABLE items; --"))
+    db.commit()
+    ```
+    ORM sends values separately from query:
+    ```sql
+    INSERT INTO items (name) VALUES ($1)  -- Query
+    ["Robert'); DROP TABLE items; --"]     -- Values
+    ```
+    [Docs](https://docs.sqlalchemy.org/en/20/faq/sqlexpressions.html#how-do-i-render-sql-expressions-as-strings-possibly-with-bound-parameters-inlined)
