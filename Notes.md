@@ -1,111 +1,88 @@
 📝 Notes
 --------
 
-- 📦 JWT (JSON Web Token)  
-  Used for authentication and authorization in web applications. Tokens are signed and contain claims about the user.
+- 🌐 Stateless Auth
+    Server doesn't store session data
+    - Token contains all needed info
+    - Each request is independent
+    - Good for API scalability
 
-  - Structure: A JWT consists of three parts: Header, Payload, and Signature.
-  - Base64-encoded: Both the header and payload are Base64 encoded for transport, but not encrypted.
-  - Signature: This ensures data integrity.
-
-- 🎫 Bearer Token  
-  - Authentication token passed in the Authorization header of an HTTP request.
-  - Access Control: Whoever holds the token can use it to access protected resources.
-
-  Example header:
-  ```javascript
-  Authorization: Bearer <your_token>
-  ```
-
-
-- 🔑 Access Token  
-A JWT used to access protected resources. Contains claims like sub (subject) and exp (expiration).
-
-  - sub: Typically stores the user ID or unique identifier (e.g., UUID or user ID).
-  - exp: Token expiration; should be set to limit the token's lifespan (e.g., 15 minutes).
-
-  Example to create the access token:  
-  ```python
-  access_token = create_access_token(data={"sub": str(db_user.id)})
-  ```
-
-- 🔒 Security & Hashing  
-  bcrypt & passlib: Used for password hashing. Storing passwords as plain-text is not secure.
-
-  ```python
-  from passlib.context import CryptContext
-  pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-  hashed_password = pwd_context.hash("password123")
-  ```
-
-  Password Verification: Use pwd_context.verify() to verify a password against the stored hash.
-  ```python
-  pwd_context.verify("password123", hashed_password)
-  ```
-
-- 🔑 JWT Token Handling  
-  jwt.encode(): Creates and signs the JWT token with the payload (data) and secret key.
-
-  ```python
-  encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-  ```
-
-  jwt.decode(): Decodes the JWT token and validates its signature using the secret key.
-
-  ```python
-  payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-  ```
-
-- Why Signing Is Useful:  
-
-  - Authenticity: It ensures that the token data was created by someone with the secret key (e.g., the server).
-
-  - Prevents Tampering: If anyone changes the data in the token, the signature will no longer be valid, so the server can reject the altered token.
-
-- 🚨 FastAPI Specific  
-  HTTPException: Raises error responses with appropriate status codes.
-
-  ```python
-  raise HTTPException(status_code=400, detail="Invalid credentials")
-  ```
-
-- Status Codes: Common status codes used in authentication.
-  - 401: Unauthorized (invalid or missing token).
-  - 404: Not Found (e.g., user not found).
-
-  Example:
+- 🔐 JWT Authentication
+    Token-based auth for stateless APIs
     ```python
-    raise HTTPException(status_code=401, detail="Invalid token")
+    # Create token
+    token = jwt.encode({"user_id": 123}, SECRET_KEY)
+
+    # Verify token
+    data = jwt.decode(token, SECRET_KEY)
     ```
+    [Docs](https://jwt.io/introduction)
 
-- 🔐 Session Management  
-  - Stateless authentication: JWT tokens store all session data, so the server doesn't need to remember user states.
-  - LocalStorage: JWT token is stored in the browser's localStorage to maintain user sessions across requests.
-  ```javascript
-  localStorage.setItem("token", access_token);
-  ```
-
-- 🔄 UUID  
-    UUID (Universally Unique Identifier): Used for unique identifiers in distributed systems.
-
-    Example for generating a UUID:
-
+- 📦 JWT Structure
+    Three parts: header.payload.signature
     ```python
-    import uuid
-    user_id = uuid.uuid4()
+    # Example payload
+    {
+      "sub": "123",           # Subject (user)
+      "exp": 1516239022,     # Expiry
+      "name": "John Doe"     # Custom claims
+    }
     ```
+    [Docs](https://jwt.io/introduction#payload)
 
-- 🧳 Session Handling  
-    Session: Use SQLAlchemy's Session to interact with the database.
-
+- ✍️ JWT Signing
+    Prevents token tampering
     ```python
-    db_user = db.query(User).filter(User.email == email).first()
+    # header.payload.signature
+    # Signature = hash(header + payload + SECRET_KEY)
+    
+    # If payload changed, signature won't match
+    # Only server with SECRET_KEY can create valid tokens
     ```
+    [Docs](https://jwt.io/introduction#signature)
 
-- 💾 Local Storage  
-    Local Storage: Stores the JWT token in the browser to keep users logged in.
-    Checking Login: The presence of a token in localStorage indicates if the user is logged in.
+- ⏰ Token Expiry
+    Tokens should expire for security
+    ```python
+    # Add expiry time
+    token = jwt.encode({
+        "user_id": 123,
+        "exp": datetime.now() + timedelta(minutes=15)
+    }, SECRET_KEY)
+    ```
+    [Docs](https://pyjwt.readthedocs.io/en/latest/usage.html#expiration-time-claim-exp)
 
-  ```javascript
-  if(localStorage.getItem("token")) { ... }
-  ```
+- 🔒 Password Hashing
+    Never store raw passwords
+    ```python
+    # Hash password
+    hashed = pwd_context.hash("secret123")
+
+    # Verify password
+    is_valid = pwd_context.verify("secret123", hashed)
+    ```
+    [Docs](https://passlib.readthedocs.io/en/stable/narr/quickstart.html)
+
+- 🛡️ Auth Headers
+    Send tokens in Authorization header
+    ```python
+    # Frontend
+    headers = {"Authorization": f"Bearer {token}"}
+
+    # Backend
+    token = request.headers["Authorization"].split(" ")[1]
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/)
+
+- 💾 Client Storage
+    Store tokens for session persistence
+    ```javascript
+    // Save token
+    localStorage.setItem("token", access_token)
+
+    // Use in requests
+    const token = localStorage.getItem("token")
+    if (token) {
+        headers.Authorization = `Bearer ${token}`
+    }
+    ```

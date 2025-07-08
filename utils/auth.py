@@ -24,7 +24,6 @@ def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
 # Create access token
-
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes=15)):
     # Generate expiration time
     expire = datetime.now(timezone.utc) + expires_delta
@@ -57,7 +56,7 @@ def get_current_user(request: Request, db: Session = Depends(get_db)) -> User:
     try:
         # Decode the token and get the user_id from the payload
         payload = decode_token(token)
-        user_id = payload.get("sub")  # "sub" typically contains user identifier
+        user_id = payload.get("user_id")  # Get user identifier from token
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid token")
 
