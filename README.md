@@ -9,7 +9,7 @@ We need to turn this into a real web backend so it can talk to the outside world
 🛠️ Tasks
 --------
 First setup:
-- Create virtual env: `python3 -m venv .venv`
+- Create virtual env: `python -m venv .venv`
 - Activate it: `source .venv/bin/activate`
 - Install deps: `pip install -r requirements.txt`
 
