@@ -1,46 +1,46 @@
-📝 Notes  
+📝 Notes
 --------
 
-- 🐘 psycopg2  
-  A Python library to connect and interact with a Postgres DB.
+- 🐘 Postgres Connect
+    Connect to database server
+    ```python
+    conn = psycopg2.connect(
+        host="localhost",
+        dbname="mydb",
+        user="admin"
+    )
+    ```
+    [Docs](https://www.psycopg.org/docs/module.html)
 
-  ```python
-  import psycopg2
-  conn = psycopg2.connect(...)
-  ```
+- 🔍 Execute Query
+    Run SQL and get results
+    ```python
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM users")
+    row = cur.fetchone()  # Returns tuple
+    print(row[0])  # Get first column
+    ```
+    [Docs](https://www.psycopg.org/docs/cursor.html)
 
-- 🔌 Database Connection  
-  Like opening a live session with the database — needed to send queries.
+- 🧹 Clean Up
+    Close database resources
+    ```python
+    cur.close()    # Close cursor first
+    conn.close()   # Then connection
+    ```
+    [Docs](https://www.psycopg.org/docs/connection.html#connection.close)
 
-- 🧭 Cursor  
-  Once connected, the cursor is your "command prompt" inside the DB — used to run SQL and fetch results.
+- 🔐 Environment
+    Load config from files
+    ```python
+    # App reads .env
+    from dotenv import load_dotenv
+    load_dotenv()
+    password = os.getenv("DB_PASS")
 
-  ```python
-  cur = conn.cursor()
-  cur.execute("SELECT NOW()")
-  result = cur.fetchone()
-  ```
-
-- 📥 cur.fetchone()   
-  Fetches **a single row** from the result of a SQL query.
-    - Returns a tuple: e.g. `("2024-04-10 17:42:01.123456",)`
-    - Use when expecting **one result only** (like `SELECT NOW()`)
-
-- 🚪 cursor.close()  
-  Tells Postgres you're done running queries.
-  Frees up memory, locks, and threads on the DB server.
-
-- 🔒 connection.close()  
-  Ends the session with the database.
-  Important: avoids exhausting the DB’s limited connection pool.
-
-- 🌍 os.getenv(...)  
-  Used to fetch environment variable values in Python — clean way to load secrets/config.
-
-  ```python
-  os.getenv("DB_PASSWORD")
-  ```
-
-- 🗂️ .env vs docker.env  
-  - .env - used by FastAPI app	(Python reads this via dotenv)
-  - docker.env - used by Docker Compose	(Used to configure containers. e.g. Postgres image)
+    # Docker reads docker.env
+    services:
+      db:
+        env_file: docker.env
+    ```
+    [Docs](https://pypi.org/project/python-dotenv/)

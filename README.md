@@ -1,20 +1,29 @@
-Step 16 – Connect FastAPI to Postgres (Raw)
-===========================================
+Step 16 – Connect to Postgres
+========================
 
-💭 Problem / Pain  
+💭 Problem / Pain
 -----------------
-The database is running, but your app isn’t talking to it yet.  
-Let’s connect to Postgres and fetch something simple — like the current DB time.
+Database connection fails with missing configuration.
+Query result also needs proper extraction.
 
-🛠️ Tasks  
----------
-- DB time API works, but incorrect time value. Can you see how to get the correct time value?   
-[hint: use print() to see what values any intereting variables have during request processing]
-
-✅ Check  
+🛠️ Tasks
 --------
-- Install new deps (psycopg2-binary, python-dotenv): `pip install -r requirements.txt`
-- Start Postgres container (if not already running): `docker compose up`
-- Start FastAPI app: `uvicorn main:app --reload`
-- Visit: `http://localhost:8000/db-time`
-- You should see the current timestamp returned from Postgres
+- Fix environment variable name
+- Fix database time value extraction
+- Verify connection and data
+
+✅ Check
+--------
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Start services:
+   - Start postgres if not running
+   - Start FastAPI app
+
+3. Test endpoint:
+   - Visit /db-time
+   - Should show current timestamp
+   - Time should update on refresh
