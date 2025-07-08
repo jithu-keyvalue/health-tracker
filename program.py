@@ -24,6 +24,3 @@ def main():
     hb_history = collect_hb_history()
     print(f"\nHi {name}, here is your Hb history:")
     print(hb_history)
-
-    # TODO: Show the bar chart
-
