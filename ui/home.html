@@ -235,6 +235,7 @@
 
     function closeUploadModal() {
       document.getElementById("uploadModal").style.display = "none";
+      document.getElementById("report-file").value = "";  // Reset file input
     }
 
     async function submitUpload() {
