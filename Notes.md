@@ -1,30 +1,53 @@
 📝 Notes
 --------
 
-- 📝 Global Exception Handler  
-  Catch all unhandled exceptions and respond cleanly.
+- 🏗️ Clean Architecture
+    Separate concerns
+    ```python
+    # Routes - handle HTTP
+    @router.get("/items")
+    def list_items(user = Depends(get_user)):
+        return service.get_items(user.id)
 
-  ```python
-  @app.exception_handler(Exception)
-  async def global_exception_handler(request: Request, exc: Exception):
-    logger.exception(f"Unhandled error on {request.url.path}: {exc}")
-    return JSONResponse(status_code=500, content={"detail": "Internal Server Error"})
-  ```
+    # Services - business logic
+    def get_items(user_id: str):
+        items = repo.get_by_user(user_id)
+        return [process(item) for item in items]
 
-  📦 Benefits:
-    - Clean, consistent error responses
-    - Adds extra info to logs (request/user/url) (easy debugging)
-    - Central place for alerting/instrumentation (send alert to developer)
+    # Repos - data access
+    def get_by_user(user_id: str):
+        return db.query(Item).filter_by(user_id=user_id)
+    ```
+    Each layer has one job
+    [Docs](https://fastapi.tiangolo.com/tutorial/bigger-applications/)
 
-🧱 Service + Repository Layers  
-  - Clean separation of concerns:  
-    - services/: business logic only (no HTTP, no DB code).  
-    -  repositories/: raw DB access — only handles queries.  
+- 🛡️ Exception Handler
+    Global error handling
+    ```python
+    @app.exception_handler(Exception)
+    async def handler(request: Request, exc: Exception):
+        # Log rich context for debugging
+        logger.error(
+            "Error processing observation",
+            extra={
+                "url": request.url.path,
+                "user": request.state.user.email,
+                "method": request.method,
+                "error": str(exc)
+            }
+        )
 
-  - Modularity  
-    - You can change how you store data (Postgres → Mongo)
-    - or how your business logic works without touching your route handlers.
-  
-  - Testability
-    - You can test services/ with fake DB or mocks — no need to spin up FastAPI.
-    - repositories/ can be tested in isolation for query correctness.
+        # Send alert for critical errors
+        if isinstance(exc, DatabaseError):
+            alert_developer(request, exc)
+
+        # Clean response to user
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": "Could not process request",
+                "code": "INTERNAL_ERROR"
+            }
+        )
+    ```
+    [Docs](https://fastapi.tiangolo.com/tutorial/handling-errors/)
