@@ -212,7 +212,7 @@
       const date = document.getElementById("obs-date").value;
       const value = parseFloat(document.getElementById("obs-value").value);
 
-      const res = await fetch(`${API}/observations`, {
+      const res = await fetch(`${API}/observations/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -263,7 +263,7 @@
     }
 
     async function load() {
-      const res = await fetch(`${API}/observations`, {
+      const res = await fetch(`${API}/observations/`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       const data = await res.json();
