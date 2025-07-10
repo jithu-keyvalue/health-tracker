@@ -1,18 +1,26 @@
-from sqlalchemy.orm import Session
+from uuid import UUID
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import User
 from app.schemas.user import UserCreate
 
-def get_by_email(db: Session, email: str):
-    return db.query(User).filter(User.email == email).first()
-
-def create_user(db: Session, user_data: UserCreate):
-    from app.utils.auth import hash_password
-    new_user = User(
-        name=user_data.name,
-        email=user_data.email,
-        password_hash=hash_password(user_data.password)
+async def create(db: AsyncSession, user: UserCreate) -> User:
+    db_user = User(
+        email=user.email,
+        name=user.name,
+        password_hash=user.password  # Note: Should be hashed in service layer
     )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return {"message": "User created", "user": {"name": new_user.name, "email": new_user.email}}
+    db.add(db_user)
+    await db.commit()
+    await db.refresh(db_user)
+    return db_user
+
+async def get_by_email(db: AsyncSession, email: str) -> User | None:
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
+
+async def get_by_id(db: AsyncSession, user_id: UUID) -> User | None:
+    stmt = select(User).where(User.id == user_id)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()

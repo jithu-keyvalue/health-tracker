@@ -1,5 +1,5 @@
 from fastapi import Depends, APIRouter
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import get_current_user, get_db
 from app.schemas.user import UserCreate, UserLogin, UserOut, Token
 from app.services import user as user_service
@@ -7,17 +7,24 @@ from app.core.logging_config import logger
 
 router = APIRouter()
 
-@router.post("/signup")
-def signup(user: UserCreate, db: Session = Depends(get_db)):
-    logger.info(f"Signup attempt for email: {user.email}")
-    return user_service.signup(db, user)
+@router.post("/signup", response_model=dict)
+async def signup(
+    user: UserCreate,
+    db: AsyncSession = Depends(get_db)
+) -> dict:
+    logger.info("Processing signup request")
+    return await user_service.signup(db, user)
 
 @router.post("/login", response_model=Token)
-def login(user: UserLogin, db: Session = Depends(get_db)):
-    logger.info(f"Login attempt for email: {user.email}")
-    return user_service.login(db, user)
+async def login(
+    user: UserLogin,
+    db: AsyncSession = Depends(get_db)
+) -> Token:
+    logger.info("Processing login request")
+    return await user_service.login(db, user)
 
 @router.get("/profile", response_model=UserOut)
-def get_profile(current_user=Depends(get_current_user)):
-    logger.info(f"Fetching profile for user: {current_user.email}")
-    return current_user
+async def get_profile(
+    current_user = Depends(get_current_user)
+) -> UserOut:
+    return UserOut.model_validate(current_user)

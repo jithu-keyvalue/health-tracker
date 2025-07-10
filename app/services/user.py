@@ -1,17 +1,26 @@
-from sqlalchemy.orm import Session
 from fastapi import HTTPException
-from app.utils.auth import verify_password, create_access_token
-from app.schemas.user import UserCreate, UserLogin
-from app.repositories import user as user_repository
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.schemas.user import UserCreate, UserLogin, UserOut, Token
+from app.repositories import user as user_repo
+from app.utils.auth import hash_password, verify_password, create_access_token
 
-def signup(db: Session, user_data: UserCreate):
-    if user_repository.get_by_email(db, user_data.email):
+async def signup(db: AsyncSession, user_data: UserCreate) -> dict:
+    if await user_repo.get_by_email(db, user_data.email):
         raise HTTPException(status_code=400, detail="Email already registered")
-    return user_repository.create_user(db, user_data)
+    
+    # Hash password before storing
+    user_data.password = hash_password(user_data.password)
+    user = await user_repo.create(db, user_data)
+    
+    return {
+        "message": "User created",
+        "user": UserOut.model_validate(user)
+    }
 
-def login(db: Session, user_data: UserLogin):
-    user = user_repository.get_by_email(db, user_data.email)
+async def login(db: AsyncSession, user_data: UserLogin) -> Token:
+    user = await user_repo.get_by_email(db, user_data.email)
     if not user or not verify_password(user_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token(data={"sub": user.id})
-    return {"access_token": token, "token_type": "bearer"}
+    
+    token = create_access_token(data={"sub": str(user.id)})
+    return Token(access_token=token, token_type="bearer")
