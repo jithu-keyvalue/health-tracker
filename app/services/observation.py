@@ -1,10 +1,21 @@
-from sqlalchemy.orm import Session
-from app.db.models import User, Observation
-from app.schemas.observation import ObservationIn
-from app.repositories import observation as observation_repository
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.schemas.observation import ObservationIn, ObservationOut
+from app.repositories import observation as observation_repo
+from app.db.models import User
+from typing import List
 
-def add_observation(db: Session, user: User, obs_data: ObservationIn) -> Observation:
-    return observation_repository.create_observation(db, user.id, obs_data)
+async def add_observation(
+    db: AsyncSession,
+    user: User,
+    obs: ObservationIn
+) -> ObservationOut:
+    # Add any business logic/validation here
+    db_obs = await observation_repo.create(db, user.id, obs)
+    return ObservationOut.model_validate(db_obs)
 
-def list_observations(db: Session, user: User):
-    return observation_repository.get_observations_for_user(db, user.id)
+async def get_user_observations(
+    db: AsyncSession,
+    user: User
+) -> List[ObservationOut]:
+    observations = await observation_repo.get_by_user(db, user.id)
+    return [ObservationOut.model_validate(obs) for obs in observations]

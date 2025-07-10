@@ -1,25 +1,22 @@
-from sqlalchemy.orm import Session
-from typing import List
+from uuid import UUID
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models import Observation
 from app.schemas.observation import ObservationIn
 
-def create_observation(db: Session, user_id: str, obs_data: ObservationIn) -> Observation:
-    obs = Observation(
-        date=obs_data.date,
-        metric=obs_data.metric,
-        value=obs_data.value,
-        file_id=obs_data.file_id,
-        user_id=user_id
+async def create(db: AsyncSession, user_id: UUID, obs: ObservationIn) -> Observation:
+    db_obs = Observation(
+        user_id=user_id,
+        date=obs.date,
+        metric=obs.metric,
+        value=obs.value
     )
-    db.add(obs)
-    db.commit()
-    db.refresh(obs)
-    return obs
+    db.add(db_obs)
+    await db.commit()
+    await db.refresh(db_obs)
+    return db_obs
 
-def get_observations_for_user(db: Session, user_id: str) -> List[Observation]:
-    return (
-        db.query(Observation)
-        .filter(Observation.user_id == user_id)
-        .order_by(Observation.date)
-        .all()
-    )
+async def get_by_user(db: AsyncSession, user_id: UUID) -> list[Observation]:
+    stmt = select(Observation).where(Observation.user_id == user_id)
+    result = await db.execute(stmt)
+    return list(result.scalars().all())

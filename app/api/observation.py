@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from app.core.dependencies import get_db, get_current_user
 from app.schemas.observation import ObservationIn, ObservationOut
@@ -10,18 +10,18 @@ from app.core.logging_config import logger
 router = APIRouter()
 
 @router.post("/", response_model=ObservationOut)
-def add_observation(
+async def add_observation(
     obs: ObservationIn,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> ObservationOut:
     logger.info(f"Adding {obs.metric} observation for user {current_user.id}")
-    return observation_service.add_observation(db, current_user, obs)
-
+    return await observation_service.add_observation(db, current_user, obs)
 
 @router.get("/", response_model=List[ObservationOut])
-def get_observations(
-    db: Session = Depends(get_db),
+async def get_observations(
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
-    return observation_service.list_observations(db, current_user)
+) -> List[ObservationOut]:
+    logger.info(f"Fetching observations for user {current_user.id}")
+    return await observation_service.get_user_observations(db, current_user)

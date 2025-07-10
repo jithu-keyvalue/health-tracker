@@ -1,0 +1,89 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+General
+----
+- Keep everything minimal but sufficient
+- Focus on one concept at a time
+- Each branch builds on previous concepts
+- Provide boilerplate, leave learning gaps
+- Make them create files only for core learning (e.g., first .py)
+- Use modern Python practices:
+  - Type hints
+  - f-strings
+  - Async where appropriate
+  - Context managers
+- Follow PEP 8 and clean code practices
+- Problem-based learning approach
+
+Problem Design
+----
+- Layer issues naturally (one leads to next)
+- Keep hints minimal and indirect
+- Let errors guide the learning
+- Guide discovery without giving answers
+- Real debugging experience
+
+README.md
+---
+- Fresh content each branch
+- Only 3 sections: Problem, Tasks, Check
+- Real-world context in problem
+- Clear, specific tasks
+- Verifiable check steps
+- No teaching material
+
+Sample:
+```
+Step 01 – Hello, Health Tracker
+===========================
+
+💭 Problem / Pain
+-----
+Real-world context for the task
+
+🛠️ Tasks
+-----
+- [ ] Create/modify specific files
+- [ ] Implement specific features
+
+✅ Check
+-----
+Clear verification steps
+```
+
+Notes.md
+-----
+- Prepend new sections, never modify previous
+- Each concept gets:
+  - Brief explanation (what it is)
+  - Minimal example (how to use it)
+  - Links to docs
+- Use ✅/❌ style only for:
+  - Common pitfalls
+  - Style choices
+  - Best practices
+- Keep examples generic (not project-specific)
+- Max 50 chars per line
+- Active voice, present tense
+
+Sample:
+```
+📝 Notes
+-----
+- 🔑 Basic Concept  
+    Brief explanation.
+    ```python
+    # Simple example
+    value = do_something()
+    ```
+    @Docs
+
+- 🚫 Common Pitfalls  
+    ```python
+    x = 1        # ✅ Clear name
+    val = 1      # ❌ Vague name
+    ```
+```
