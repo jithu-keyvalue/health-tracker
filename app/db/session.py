@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 from app.core.settings import settings
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
@@ -16,11 +17,20 @@ class Base(DeclarativeBase):
 engine = create_async_engine(
     ASYNC_DB_URL,
     echo=False,
-    pool_pre_ping=True  # Ensure connection is alive
+    pool_pre_ping=True
 )
 
 AsyncSessionLocal = async_sessionmaker(
     engine,
     class_=AsyncSession,
-    expire_on_commit=False  # Don't expire objects after commit
+    expire_on_commit=False
 )
+
+@asynccontextmanager
+async def get_session() -> AsyncSession:
+    """Get a database session using async context manager."""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
