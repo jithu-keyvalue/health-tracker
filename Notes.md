@@ -28,7 +28,7 @@
     async def handler(request: Request, exc: Exception):
         # Log rich context for debugging
         logger.error(
-            "Error processing observation",
+            "Unhandled exception occurred",
             extra={
                 "url": request.url.path,
                 "user": request.state.user.email,
