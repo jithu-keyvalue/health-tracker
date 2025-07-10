@@ -1,31 +1,37 @@
-Step 25 - Async Database Performance
+Step 25 - Async Database
 ===========================
 
 💭 Problem
 -----
-The health tracker is getting slow as more users upload lab reports. 
-Database queries are blocking each other and the app feels sluggish.
-Users also report seeing timeouts when viewing large lists of records.
+Multiple pages are broken! After switching to async SQLAlchemy, 
+both the profile page and observations list have different async-related errors.
+
+Something went wrong during the async migration - you'll need to debug 
+and fix the async/await usage in the API endpoints.
 
 🛠️ Tasks
 -----
-- [ ] Switch to async database with SQLAlchemy 2.0
-- [ ] Fix the N+1 query in users/observations page
-- [ ] Add pagination to observation list
+- [ ] Fix the async issues in the API endpoints
 
 ✅ Check
 -----
 1. Setup:
-    - Install requirements: `pip install -r requirements.txt`
-    - Start database: `docker compose up -d`
+    - Install: `pip install -r requirements.txt`
+    - Start services: `docker compose up -d`
     - Run migrations: `alembic upgrade head`
 
 2. Run App:
-    - Start backend: `uvicorn app.main:app --reload`
-    - Start frontend: `cd ui && python -m http.server 8001`
+    - Backend: `uvicorn app.main:app --reload`
+    - Frontend: `cd ui && python -m http.server 8001`
 
-3. Verify:
-    - App starts without SQLAlchemy warnings
-    - Users page loads without errors
-    - Observation list shows paginated results
+3. Test the Fix:
+    - Login with existing account
+    - Visit profile page (should work)
+    - Visit home page - observations should load
+    - Check server logs for async-related errors
+
+4. Success:
+    - Profile page loads correctly
+    - Home page shows user's observations correctly
+    - No async-related errors in logs
  

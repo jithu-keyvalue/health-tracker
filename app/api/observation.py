@@ -24,4 +24,4 @@ async def get_observations(
     current_user: User = Depends(get_current_user)
 ) -> List[ObservationOut]:
     logger.info(f"Fetching observations for user {current_user.id}")
-    return await observation_service.get_user_observations(db, current_user)
+    return observation_service.get_user_observations(db, current_user)
