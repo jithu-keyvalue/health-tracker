@@ -8,7 +8,7 @@ async def create(db: AsyncSession, user: UserCreate) -> User:
     db_user = User(
         email=user.email,
         name=user.name,
-        password_hash=user.password  # Note: Should be hashed in service layer
+        password_hash=user.password
     )
     db.add(db_user)
     await db.commit()

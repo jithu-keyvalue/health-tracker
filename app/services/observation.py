@@ -9,7 +9,6 @@ async def add_observation(
     user: User,
     obs: ObservationIn
 ) -> ObservationOut:
-    # Add any business logic/validation here
     db_obs = await observation_repo.create(db, user.id, obs)
     return ObservationOut.model_validate(db_obs)
 

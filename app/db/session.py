@@ -25,12 +25,3 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False
 )
-
-@asynccontextmanager
-async def get_session() -> AsyncSession:
-    """Get a database session using async context manager."""
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()

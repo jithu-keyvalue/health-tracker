@@ -1,63 +1,46 @@
 📝 Notes
 --------
 
-- 🔄 Async SQLAlchemy
-    Basic query with async/await
+- 🔄 Async Database
+    Basic setup
     ```python
-    # Simple select
-    result = await db.scalars(
-        select(User).where(User.id == 1)
+    # Engine and session
+    engine = create_async_engine(
+        "postgresql+asyncpg://user:pass@host/db"
     )
+    async_session = async_sessionmaker(engine)
     ```
 
-    Session management
+    Query patterns
+    ```python
+    # Basic select
+    stmt = select(User).where(User.id == 1)
+    user = await db.scalar(stmt)
+
+    # Multiple results
+    stmt = select(Item).order_by(Item.id)
+    items = await db.scalars(stmt)
+    ```
+
+    Session usage
     ```python
     # ✅ Context manager
-    async with AsyncSession() as db:
-        await db.scalars(stmt)
-    
+    async with async_session() as db:
+        await db.scalar(stmt)
+
     # ❌ Manual cleanup
-    db = AsyncSession()
+    db = async_session()
     await db.close()
     ```
 
-    Loading relationships
+    FastAPI integration
     ```python
-    # Basic: Separate queries
-    user = await db.scalar(select(User))
-    items = await db.scalars(
-        select(Item).where(Item.user_id == user.id)
-    )
+    async def get_db():
+        async with async_session() as db:
+            yield db
 
-    # Better: Join load
-    user = await db.scalar(
-        select(User).options(
-            joinedload(User.items)
-        )
-    )
-    items = user.items  # Already loaded
-    ```
-
-    Pagination pattern
-    ```python
-    # Count total
-    count = await db.scalar(
-        select(func.count()).select_from(Item)
-    )
-    
-    # Get page
-    items = await db.scalars(
-        select(Item)
-        .limit(10)
-        .offset((page - 1) * 10)
-    )
+    @router.get("/items")
+    async def list_items(db: AsyncSession):
+        return await db.scalars(select(Item))
     ```
     [Docs](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)
-
-- 🔌 AsyncPG
-    Fast async PostgreSQL driver
-    ```python
-    # URL format
-    postgresql+asyncpg://user:pass@host/db
-    ```
-    [Docs](https://magicstack.github.io/asyncpg/current/)
