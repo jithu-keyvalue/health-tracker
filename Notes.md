@@ -57,6 +57,34 @@
     ```
     [Docs](https://docs.sqlalchemy.org/en/20/orm/relationships.html)
 
+- 🔀 Relationship Types
+    ```python
+    # One-to-Many (1:N)
+    class Parent(Base):
+        children = relationship("Child", back_populates="parent")
+    class Child(Base):
+        parent_id = Column(Integer, ForeignKey("parent.id"))
+        parent = relationship("Parent", back_populates="children")
+
+    # One-to-One (1:1)
+    class Parent(Base):
+        child = relationship("Child", uselist=False, back_populates="parent")
+    class Child(Base):
+        parent_id = Column(Integer, ForeignKey("parent.id"), unique=True)
+        parent = relationship("Parent", back_populates="child")
+
+    # Many-to-Many (N:N)
+    student_courses = Table('student_courses', Base.metadata,
+        Column('student_id', ForeignKey('student.id')),
+        Column('course_id', ForeignKey('course.id'))
+    )
+    class Student(Base):
+        courses = relationship("Course", secondary=student_courses, back_populates="students")
+    class Course(Base):
+        students = relationship("Student", secondary=student_courses, back_populates="courses")
+    ```
+    [Docs](https://docs.sqlalchemy.org/en/20/orm/relationships.html)
+
 - 🔄 Lazy Loading
     Load related data on demand
     ```python
