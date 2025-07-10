@@ -30,10 +30,14 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(minutes
     
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
-def decode_token(token: str):
+def decode_token(token: str) -> str:
+    """Decode JWT token and return the user ID from the 'sub' field."""
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
+        user_id = payload.get("sub")
+        if not user_id:
+            raise HTTPException(status_code=401, detail="Invalid token: missing user ID")
+        return user_id
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
     

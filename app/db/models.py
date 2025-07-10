@@ -41,7 +41,7 @@ class UploadedFile(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     hash = Column(String, unique=True, nullable=False)
-    uploaded_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    uploaded_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
     user = relationship("User", back_populates="files")
     observations = relationship("Observation", back_populates="file")

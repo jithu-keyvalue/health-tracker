@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from datetime import date as DateType
 from typing import Optional
 
@@ -9,6 +9,8 @@ class ObservationIn(BaseModel):
     file_id: Optional[str] = None  # optional field
 
 class ObservationOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     date: DateType
     metric: str
     value: float

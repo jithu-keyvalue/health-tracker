@@ -15,7 +15,17 @@ Users also report seeing timeouts when viewing large lists of records.
 
 ✅ Check
 -----
-1. App starts without errors after async migration
-2. Users page loads quickly (single query)
-3. Observation list shows 10 items per page
+1. Setup:
+    - Install requirements: `pip install -r requirements.txt`
+    - Start database: `docker compose up -d`
+    - Run migrations: `alembic upgrade head`
+
+2. Run App:
+    - Start backend: `uvicorn app.main:app --reload`
+    - Start frontend: `cd ui && python -m http.server 8001`
+
+3. Verify:
+    - App starts without SQLAlchemy warnings
+    - Users page loads without errors
+    - Observation list shows paginated results
  
