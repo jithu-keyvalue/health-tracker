@@ -5,10 +5,12 @@ asyncpg            # Async PostgreSQL driver
 python-dotenv       # Reading env
 alembic             # DB migrations
 python-jose         # For JWT
-passlib[bcrypt]     # For password hashing
+argon2-cffi        # For Argon2 password hashing
 PyPDF2              # For reading PDF
 celery              # For background tasks
 openai              # For OpenAI API calls
 redis               # For cache
 python-multipart    # For handling file upload
 pydantic_settings   # For settings
+pytest              # For testing
+pydantic-settings   # For settings management
