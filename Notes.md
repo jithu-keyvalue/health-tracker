@@ -21,6 +21,24 @@
     
     Run tests: `pytest -v tests/test_simple.py`
 
+- 🧪 Pure Function Tests  
+    Testing utility functions with known inputs/outputs.
+    ```python
+    # tests/test_utils.py
+    def test_file_hash():
+        content = b"Hello, World!"
+        hash1 = hash_file(content)
+        hash2 = hash_file(content)
+        
+        assert hash1 == hash2  # Consistent results
+        assert len(hash1) == 64  # Expected format
+    ```
+    Key patterns:
+    - Test with known inputs
+    - Verify consistency
+    - Check edge cases
+    - Use deterministic examples
+
 - 🔐 Password Hashing  
     Using Argon2id (OWASP 2024 recommendation).
     ```python
