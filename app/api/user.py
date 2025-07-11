@@ -27,5 +27,5 @@ async def login(
 async def get_profile(
     current_user = Depends(get_current_user)
 ) -> UserOut:
-    await logger.info(f"Fetching profile for user {current_user.id}")
+    logger.info(f"Fetching profile for user {current_user.id}")
     return UserOut.model_validate(current_user)
