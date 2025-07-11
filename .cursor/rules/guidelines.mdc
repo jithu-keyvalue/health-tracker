@@ -56,7 +56,8 @@ Clear verification steps
 
 Notes.md
 -----
-- Prepend new sections, never modify previous
+- Each branch has its own focused notes
+- Only document concepts introduced in this branch
 - Each concept gets:
   - Brief explanation (what it is)
   - Minimal example (how to use it)
