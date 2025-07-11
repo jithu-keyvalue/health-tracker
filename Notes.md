@@ -22,25 +22,42 @@
     Run tests: `pytest -v tests/test_simple.py`
 
 - 🧪 Testing Async Services  
-    Using pytest-asyncio and mocking.
+    Testing FastAPI services without real database.
     ```python
-    @pytest.mark.asyncio
+    @pytest.mark.asyncio  # Enable async test
     async def test_signup(mocker):
-        # Mock dependencies
-        mock_db = mocker.AsyncMock()
-        mocker.patch(
-            "app.services.user.user_repo.get_by_email",
-            return_value=None
+        # 1. Setup test data
+        user_data = UserCreate(
+            email="test@example.com",
+            name="Test User"
         )
         
-        # Test the service
+        # 2. Create mocks
+        mock_db = mocker.AsyncMock()  # Fake DB session
+        mock_get_by_email = mocker.patch(  # Fake repo call
+            "app.services.user.user_repo.get_by_email",
+            return_value=None  # No existing user
+        )
+        
+        # 3. Run the function
         result = await signup(mock_db, user_data)
+        
+        # 4. Verify behavior
+        mock_get_by_email.assert_called_once()  # Called once
         assert result["message"] == "User created"
     ```
-    Key patterns:
-    - Mark tests with @pytest.mark.asyncio
-    - Mock async dependencies
-    - Test both success and error paths
+    Why Mock?
+    - No real database needed
+    - Tests run fast
+    - No cleanup required
+    - Can test error cases easily
+    
+    Common Patterns:
+    - @pytest.mark.asyncio for async tests
+    - mocker.AsyncMock() for async dependencies
+    - mocker.patch() to replace functions
+    - assert_called_once() to verify calls
+    - pytest.raises() for errors
 
 - 🔐 Password Hashing  
     Using Argon2id (OWASP 2024 recommendation).
