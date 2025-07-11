@@ -21,23 +21,26 @@
     
     Run tests: `pytest -v tests/test_simple.py`
 
-- 🧪 Pure Function Tests  
-    Testing utility functions with known inputs/outputs.
+- 🧪 Testing Async Services  
+    Using pytest-asyncio and mocking.
     ```python
-    # tests/test_utils.py
-    def test_file_hash():
-        content = b"Hello, World!"
-        hash1 = hash_file(content)
-        hash2 = hash_file(content)
+    @pytest.mark.asyncio
+    async def test_signup(mocker):
+        # Mock dependencies
+        mock_db = mocker.AsyncMock()
+        mocker.patch(
+            "app.services.user.user_repo.get_by_email",
+            return_value=None
+        )
         
-        assert hash1 == hash2  # Consistent results
-        assert len(hash1) == 64  # Expected format
+        # Test the service
+        result = await signup(mock_db, user_data)
+        assert result["message"] == "User created"
     ```
     Key patterns:
-    - Test with known inputs
-    - Verify consistency
-    - Check edge cases
-    - Use deterministic examples
+    - Mark tests with @pytest.mark.asyncio
+    - Mock async dependencies
+    - Test both success and error paths
 
 - 🔐 Password Hashing  
     Using Argon2id (OWASP 2024 recommendation).

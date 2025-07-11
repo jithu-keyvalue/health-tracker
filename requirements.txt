@@ -13,4 +13,6 @@ redis               # For cache
 python-multipart    # For handling file upload
 pydantic_settings   # For settings
 pytest              # For testing
+pytest-asyncio      # For async test support
+pytest-mock         # For mocking in tests
 pydantic-settings   # For settings management
