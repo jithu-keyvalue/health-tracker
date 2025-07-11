@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from app.schemas.user import UserCreate
 from app.services.user import signup
 
-@pytest.mark.asyncio  # Enables async test - needed for 'await' to work
+@pytest.mark.asyncio
 async def test_signup_success(mocker):
     """Test successful user signup."""
     # Test data
@@ -13,7 +13,7 @@ async def test_signup_success(mocker):
         name="Test User"
     )
     
-    # Mock the database session - avoid real DB connections
+    # Mock DB session
     mock_db = mocker.AsyncMock()
     
     # Mock get_by_email to return None (no existing user)
@@ -22,7 +22,13 @@ async def test_signup_success(mocker):
         return_value=None
     )
     
-    # Prepare mock user that repo will "create"
+    # Mock hash_password to return predictable hash
+    mock_hash_password = mocker.patch(
+        "app.services.user.hash_password",
+        return_value="hashed_password_123"
+    )
+    
+    # Prepare mock user that create will return
     mock_created_user = mocker.Mock()
     mock_created_user.id = "123"
     mock_created_user.email = user_data.email
@@ -37,18 +43,21 @@ async def test_signup_success(mocker):
     # Call the function we're testing
     result = await signup(mock_db, user_data)
     
-    # Verify the function:
+    # Verify:
     # 1. Checked for existing user
     mock_get_by_email.assert_called_once_with(mock_db, user_data.email)
     
-    # 2. Created new user with hashed password
-    mock_create.assert_called_once()
-    create_args = mock_create.call_args[0]  # args passed to create()
-    assert create_args[0] == mock_db  # First arg should be db
-    assert create_args[1].email == user_data.email  # Should have same email
-    assert create_args[1].password != user_data.password  # Should be hashed
+    # 2. Password was hashed
+    mock_hash_password.assert_called_once_with("securepass123")
     
-    # 3. Returned correct response format
+    # 3. User was created with correct data
+    mock_create.assert_called_once()
+    create_args = mock_create.call_args[0]
+    assert create_args[0] == mock_db  # First arg should be db session
+    assert create_args[1].email == user_data.email  # Email matches
+    assert create_args[1].password == "hashed_password_123"  # Password was hashed
+    
+    # 4. Response has correct format and data
     assert result["message"] == "User created"
     assert result["user"].email == user_data.email
     assert result["user"].name == user_data.name
