@@ -61,7 +61,7 @@ async def _process_file_logic(db: AsyncSession, file_hash: str, content: str, us
         
         # Notify user of successful processing
         publish_notification(
-            user_id, 
+            file.id,  # BUG: Using file ID instead of user ID
             f"File processed successfully! Added {len(observations)} observations.", 
             "success"
         )

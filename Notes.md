@@ -71,3 +71,51 @@
     // ❌ No error handling
     eventSource.onmessage = handler;
     ```
+
+- 🔧 Debugging SSE Issues  
+    Check browser Network tab for SSE connection status.
+    ```javascript
+    // Log all received messages
+    eventSource.onmessage = (event) => {
+      console.log("SSE message:", JSON.parse(event.data));
+    };
+    
+    // Check connection state
+    console.log("ReadyState:", eventSource.readyState);
+    // 0=CONNECTING, 1=OPEN, 2=CLOSED
+    ```
+    @Browser DevTools Network Tab
+
+- 🔧 Redis Notification Debugging  
+    Verify notifications are being published correctly.
+    ```python
+    # Check what's in Redis
+    redis.lrange("notifications:user123", 0, -1)
+    
+    # Monitor Redis activity
+    redis.monitor()  # Shows all Redis commands
+    ```
+    @Redis Debugging Commands
+
+- 🚫 Common Notification Bugs  
+    ```python
+    # ✅ Correct user ID
+    publish_notification(user_id, "Success!", "success")
+    
+    # ❌ Wrong identifier 
+    publish_notification(file.id, "Success!", "success")
+    ```
+
+- 🚫 Async Context Issues  
+    ```python
+    # ✅ Proper exception handling
+    try:
+        result = await process_data()
+        publish_notification(user_id, "Success!", "success")
+    except Exception as e:
+        publish_notification(user_id, "Failed!", "error")
+    
+    # ❌ Missing user context in catch block
+    except Exception:
+        publish_notification(wrong_id, "Failed!", "error")
+    ```
