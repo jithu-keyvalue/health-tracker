@@ -11,6 +11,9 @@ async def stream_user_notifications(user_id: str) -> AsyncGenerator[str, None]:
     """Stream notifications for a specific user via SSE"""
     logger.info(f"Starting notification stream for user {user_id}")
     
+    # Send initial heartbeat to establish connection
+    yield f"data: {json.dumps({'type': 'heartbeat', 'message': 'Connected'})}\n\n"
+    
     while True:
         try:
             # Check for new notifications

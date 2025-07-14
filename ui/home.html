@@ -236,17 +236,25 @@
     }
 
     function connectSSE() {
-      const eventSource = new EventSource(`${API}/notifications/stream`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
+      const eventSource = new EventSource(`${API}/notifications/stream?token=${token}`);
+
+      eventSource.onopen = function(event) {
+        console.log("SSE connection opened successfully");
+      };
 
       eventSource.onmessage = function(event) {
         const notification = JSON.parse(event.data);
-        showToast(notification.message, notification.type);
+        console.log("Received notification:", notification);
+        
+        // Don't show heartbeat messages as toasts
+        if (notification.type !== 'heartbeat') {
+          showToast(notification.message, notification.type);
+        }
       };
 
       eventSource.onerror = function(event) {
         console.log("SSE connection error:", event);
+        console.log("EventSource readyState:", eventSource.readyState);
         // Reconnect after 5 seconds
         setTimeout(connectSSE, 5000);
       };
