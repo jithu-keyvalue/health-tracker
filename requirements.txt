@@ -2,6 +2,7 @@ uvicorn             # ASGI server
 fastapi             # FastAPI web app
 sqlalchemy>=2.0.0   # Modern async ORM
 asyncpg            # Async PostgreSQL driver
+psycopg2-binary    # For Alembic migrations
 python-dotenv       # Reading env
 alembic             # DB migrations
 python-jose         # For JWT
