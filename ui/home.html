@@ -249,6 +249,11 @@
         // Don't show heartbeat messages as toasts
         if (notification.type !== 'heartbeat') {
           showToast(notification.message, notification.type);
+          
+          // Refresh table when file processing succeeds
+          if (notification.type === 'success') {
+            load();
+          }
         }
       };
 
