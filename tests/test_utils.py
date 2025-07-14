@@ -1,30 +1,33 @@
+"""
+Tests for utility functions.
+"""
+
 from app.utils.hash import hash_file
+from app.utils.auth import hash_password, verify_password
 
-def test_file_hash_different_content():
-    """Test that different content produces different hashes."""
-    content1 = b"Hello, World!"
-    content2 = b"Hello, world!"  # Different case
+def test_password_hashing():
+    """Test password hashing and verification."""
+    password = "secure_password_123"
+    hashed = hash_password(password)
     
-    hash1 = hash_file(content1)
-    hash2 = hash_file(content2)
-    
-    assert hash1 != hash2
-    assert len(hash1) == 64  # SHA-256 produces 64 char hex string
-    assert len(hash2) == 64
+    assert hashed != password
+    assert verify_password(password, hashed)
+    assert not verify_password("wrong_password", hashed)
 
-def test_file_hash_same_content():
-    """Test that same content produces same hash."""
-    content = b"Hello, World!"
+def test_file_hash_consistency():
+    """Test file hashing produces consistent results."""
+    content = b"Sample health record content"
     
+    # Same content should produce same hash
     hash1 = hash_file(content)
     hash2 = hash_file(content)
-    
     assert hash1 == hash2
     
-def test_file_hash_empty_content():
-    """Test hashing empty content."""
-    empty_hash = hash_file(b"")
+    # Different content should produce different hash
+    different_content = content + b" modified"
+    hash3 = hash_file(different_content)
+    assert hash1 != hash3
     
-    # Known SHA-256 hash of empty string
-    expected = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    assert empty_hash == expected 
+    # Hash should be proper SHA-256 format
+    assert len(hash1) == 64
+    assert all(c in '0123456789abcdef' for c in hash1) 

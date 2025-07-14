@@ -4,7 +4,7 @@ from typing import Optional
 
 class ObservationIn(BaseModel):
     date: DateType
-    metric: str = Field(..., example="hb")
+    metric: str = Field(..., json_schema_extra={"example": "hb"})
     value: float = Field(..., gt=0)
     file_id: Optional[str] = None  # optional field
 
