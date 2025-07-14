@@ -3,12 +3,11 @@ import json
 from openai import OpenAI
 import logging
 from celery import Celery
-from app.db.session import AsyncSessionLocal
 from app.db.models import UploadedFile, Observation
 from datetime import datetime
 from app.core.settings import settings
 import asyncio
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from app.services.notification import publish_notification
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
@@ -19,6 +18,27 @@ celery_app = Celery(
 )
 
 logger = logging.getLogger(__name__)
+
+def create_async_db_session():
+    """Create a new database engine and session within the current event loop"""
+    ASYNC_DB_URL = (
+        f"postgresql+asyncpg://{settings.DB_USER}:{settings.DB_PASSWORD}"
+        f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+    )
+    
+    engine = create_async_engine(
+        ASYNC_DB_URL,
+        echo=False,
+        pool_pre_ping=True
+    )
+    
+    AsyncSessionLocal = async_sessionmaker(
+        engine,
+        class_=AsyncSession,
+        expire_on_commit=False
+    )
+    
+    return AsyncSessionLocal, engine
 
 @celery_app.task
 def process_uploaded_file(file_hash: str, content: str, user_id: str):
@@ -31,13 +51,16 @@ def process_uploaded_file(file_hash: str, content: str, user_id: str):
         loop.close()
 
 async def _process_lab_report_async(file_hash: str, content: str, user_id: str):
-    async with AsyncSessionLocal() as db:
+    session_factory, engine = create_async_db_session()
+    async with session_factory() as db:
         try:
             await _process_file_logic(db, file_hash, content, user_id)
         except Exception:
             logger.exception("❌ Error while processing file")
             await db.rollback()
             raise
+        finally:
+            await engine.dispose()
 
 async def _process_file_logic(db: AsyncSession, file_hash: str, content: str, user_id: str):
     logger.info(f"Processing file hash={file_hash} for user={user_id}")
@@ -61,21 +84,19 @@ async def _process_file_logic(db: AsyncSession, file_hash: str, content: str, us
         
         # Notify user of successful processing
         publish_notification(
-            file.id,  # BUG: Using file ID instead of user ID
+            file.id,
             f"File processed successfully! Added {len(observations)} observations.", 
             "success"
         )
         
     except Exception as e:
         logger.error(f"❌ Error processing file {file_hash}: {e}")
-        
-        # Notify user of processing failure
+        # Notify user of error
         publish_notification(
-            user_id, 
-            "File processing failed. Please try again.", 
+            user_id,
+            "File processing failed. Please try again.",
             "error"
         )
-        
         raise
 
 async def _extract_health_data(content: str) -> list:
