@@ -22,7 +22,13 @@ logger = logging.getLogger(__name__)
 
 @celery_app.task
 def process_uploaded_file(file_hash: str, content: str, user_id: str):
-    asyncio.run(_process_lab_report_async(file_hash, content, user_id))
+    # Create a new event loop for this task to avoid conflicts
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(_process_lab_report_async(file_hash, content, user_id))
+    finally:
+        loop.close()
 
 async def _process_lab_report_async(file_hash: str, content: str, user_id: str):
     async with AsyncSessionLocal() as db:
