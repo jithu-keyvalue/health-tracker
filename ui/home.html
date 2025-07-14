@@ -190,6 +190,9 @@
     </div>
   </div>
 
+  <!-- Toast notifications -->
+  <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1000;"></div>
+
   <script>
     const API = "http://localhost:8000/v1";
     const token = localStorage.getItem("token");
@@ -197,6 +200,56 @@
     function logout() {
       localStorage.removeItem("token");
       window.location.href = "/index.html";
+    }
+
+    function showToast(message, type = "info") {
+      const toast = document.createElement("div");
+      toast.style.cssText = `
+        padding: 12px 20px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        color: white;
+        font-weight: 500;
+        min-width: 250px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        background: ${type === "success" ? "#4CAF50" : type === "error" ? "#f44336" : "#2196F3"};
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+      `;
+      
+      toast.textContent = message;
+      document.getElementById("toast-container").appendChild(toast);
+      
+      // Animate in
+      setTimeout(() => {
+        toast.style.opacity = "1";
+        toast.style.transform = "translateX(0)";
+      }, 100);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(100%)";
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    function connectSSE() {
+      const eventSource = new EventSource(`${API}/notifications/stream`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+
+      eventSource.onmessage = function(event) {
+        const notification = JSON.parse(event.data);
+        showToast(notification.message, notification.type);
+      };
+
+      eventSource.onerror = function(event) {
+        console.log("SSE connection error:", event);
+        // Reconnect after 5 seconds
+        setTimeout(connectSSE, 5000);
+      };
     }
 
     function openAddModal() {
@@ -257,6 +310,7 @@
       if (res.ok) {
         closeUploadModal();
         load();
+        showToast("File uploaded successfully! Processing...", "info");
       } else {
         alert("Upload failed");
       }
@@ -281,6 +335,8 @@
       });
     }
 
+    // Initialize SSE connection and load data
+    connectSSE();
     load();
   </script>
 </body>

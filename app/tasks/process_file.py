@@ -9,6 +9,7 @@ from datetime import datetime
 from app.core.settings import settings
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.services.notification import publish_notification
 
 client = OpenAI(api_key=settings.OPENAI_API_KEY)
 
@@ -35,21 +36,41 @@ async def _process_lab_report_async(file_hash: str, content: str, user_id: str):
 async def _process_file_logic(db: AsyncSession, file_hash: str, content: str, user_id: str):
     logger.info(f"Processing file hash={file_hash} for user={user_id}")
     
-    # Extract health data from content
-    records = await _extract_health_data(content)
-    
-    # Save file entry
-    file = UploadedFile(user_id=user_id, hash=file_hash)
-    db.add(file)
-    await db.commit()
-    await db.refresh(file)
-    
-    # Create and save observations
-    observations = _create_observations(records, user_id, file.id)
-    db.add_all(observations)
-    await db.commit()
-    
-    logger.info(f"✅ Done processing file {file_hash}")
+    try:
+        # Extract health data from content
+        records = await _extract_health_data(content)
+        
+        # Save file entry
+        file = UploadedFile(user_id=user_id, hash=file_hash)
+        db.add(file)
+        await db.commit()
+        await db.refresh(file)
+        
+        # Create and save observations
+        observations = _create_observations(records, user_id, file.id)
+        db.add_all(observations)
+        await db.commit()
+        
+        logger.info(f"✅ Done processing file {file_hash}")
+        
+        # Notify user of successful processing
+        publish_notification(
+            user_id, 
+            f"File processed successfully! Added {len(observations)} observations.", 
+            "success"
+        )
+        
+    except Exception as e:
+        logger.error(f"❌ Error processing file {file_hash}: {e}")
+        
+        # Notify user of processing failure
+        publish_notification(
+            user_id, 
+            "File processing failed. Please try again.", 
+            "error"
+        )
+        
+        raise
 
 async def _extract_health_data(content: str) -> list:
     """Extract health metrics from lab report content using OpenAI."""
